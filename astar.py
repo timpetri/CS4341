@@ -31,6 +31,7 @@ def printWorld(world):
 	for line in world:
 		for element in line:
 			print element,
+	print str(world)
 	print ""
 
 def loadInputFile(fileName):
@@ -48,7 +49,7 @@ def loadInputFile(fileName):
 		for value in values:
 			if value is charStartState or value is charGoalState:
 				world[count].append(value)
-			else
+			else:
 				world[count].append(int(value))
 		count += 1
 	printWorld(world)

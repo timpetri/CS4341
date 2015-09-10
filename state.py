@@ -3,6 +3,7 @@
 
 """
 import math
+import copy
 
 class State:
 	
@@ -18,21 +19,32 @@ class State:
 
 
 	def __init__(self, world, posX, posY, goalX, goalY, direction, score , actionList):
-		# global
-		this.world = world
+		# global 2d array
+		self.world = world
 
 		# world
-		this.goalX = goalX
-		this.goalY = goalY
+		self.goalX = goalX
+		self.goalY = goalY
 
 		# agent
-		this.posX = posX
-		this.posY = posY
-		this.direction = direction
+		self.posX = posX
+		self.posY = posY
+		self.direction = direction
 
 		# important
-		this.score = score
-		this.actionList = actionList
+		self.score = score
+		self.actionList = actionList
+
+	def copy(self):
+		"""	Params: none
+			Return: a copy of the 
+		"""
+		newState = copy.deepcopy(self)
+		return newState
+
+	def isGoalState(self):
+		return self.posX == self.goalX and self.posY == self.goalY
+
 
 	def getSuccessors(self):
 		"""	Params: none
@@ -58,23 +70,23 @@ class State:
 		"""	Params: none
 			Return: state after performing forward action
 		"""
-		newState = State(self)
+		newState = self.copy()
 
 		# add forward to action list
-		newState.actionList.append(this.act_forward)
+		newState.actionList.append(self.act_forward)
 
 		# set new position of agent
-		if self.direction is this.north:
+		if self.direction is self.north:
 			newState.posY -= 1
-		elif self.direction is this.east:
+		elif self.direction is self.east:
 			newState.posX += 1
-		elif self.diretion is this.south:
+		elif self.diretion is self.south:
 			newState.posY += 1
-		elif self.direction is this.west:
+		elif self.direction is self.west:
 			newState.posX -= 1
 
 		# decrement score by time complexity of new square
-		newState.score -= world[newState.posY][newState.posX]
+		newState.score -= self.world[newState.posY][newState.posX]
 
 		return newState
 	
@@ -82,23 +94,23 @@ class State:
 		"""	Params: none
 			Return: state after performing turn left action
 		"""
-		newState = State(self)
+		newState = self.copy()
 
 		# add forward to action list
-		newState.actionList.append(this.act_left)
+		newState.actionList.append(self.act_left)
 
 		# set new position of agent
-		if self.direction is this.north:
-			newState.direction = this.west
-		elif self.direction is this.east:
-			newState.direction = this.north
-		elif self.diretion is this.south:
-			newState.direction = this.east
-		elif self.direction is this.west:
-			newState.direction = this.south
+		if self.direction is self.north:
+			newState.direction = self.west
+		elif self.direction is self.east:
+			newState.direction = self.north
+		elif self.diretion is self.south:
+			newState.direction = self.east
+		elif self.direction is self.west:
+			newState.direction = self.south
 
 		# decrement score by 1/3 of time complexity in current square
-		newState.score -= math.ceil(world[newState.posY][newState.posX]/3)
+		newState.score -= math.ceil(self.world[newState.posY][newState.posX]/3)
 
 		return newState
 
@@ -107,23 +119,23 @@ class State:
 			Return: state after performing turn right action
 		"""
 
-		newState = State(self)
+		newState = self.copy()
 
 		# add forward to action list
-		newState.actionList.append(this.act_right)
+		newState.actionList.append(self.act_right)
 
 		# set new position of agent
-		if self.direction is this.north:
-			newState.direction = this.east
-		elif self.direction is this.east:
-			newState.direction = this.south
-		elif self.diretion is this.south:
-			newState.direction = this.west
-		elif self.direction is this.west:
-			newState.direction = this.north
+		if self.direction is self.north:
+			newState.direction = self.east
+		elif self.direction is self.east:
+			newState.direction = self.south
+		elif self.diretion is self.south:
+			newState.direction = self.west
+		elif self.direction is self.west:
+			newState.direction = self.north
 
 		# decrement score by 1/3 of time complexity in current square
-		newState.score -= math.ceil(world[newState.posY][newState.posX]/3)
+		newState.score -= math.ceil(self.world[newState.posY][newState.posX]/3)
 
 		return newState
 
@@ -131,19 +143,19 @@ class State:
 		"""	Params: none
 			Return: state after performing turn left action
 		"""
-		newState = State(self)
+		newState = self.copy()
 
 		# add forward to action list
 		newState.actionList.append(act_bash)
 
 		# set new position of agent
-		if self.direction is this.north:
+		if self.direction is self.north:
 			newState.posY -= 1
-		elif self.direction is this.east:
+		elif self.direction is self.east:
 			newState.posX += 1
-		elif self.diretion is this.south:
+		elif self.diretion is self.south:
 			newState.posY += 1
-		elif self.direction is this.west:
+		elif self.direction is self.west:
 			newState.posX -= 1
 
 		# decrement score by 3
@@ -157,24 +169,24 @@ class State:
 			Return: state after performing demolish
 		"""
 
-		newState = State(self)
+		newState = self.copy()
 
 		# add forward to action list
 		newState.actionList.append(act_demolish)
 
 		# set adjacent squares to 3
-		maxY = len(world)
-		maxX = len(world[0])
+		maxY = len(self.world)
+		maxX = len(self.world[0])
 
-		startPosX = newState.posX is 0 ? 0 : newState.posX-1;
-		startPosY = newState.posY is 0 ? 0 : newState.posY-1;
-		endPosX = newState.posX is maxX ? maxX : newState.posX+1;
-		endPosY = newState.posY is maxY ? maxY : newState.posY+1;
+		startPosX = 0 if newState.posX is 0 else newState.posX-1
+		startPosY = 0 if newState.posY is 0 else newState.posY-1
+		endPosX = maxX if newState.posX is maxX else  newState.posX+1
+		endPosY = maxY if newState.posY is maxY else newState.posY+1
 
 		for i in range(startPosY, endPosY):
 			for j in range(startPosX, endPosX):
 				if i is not newstate.PosY and j is not newState.PosX: # exclude current pos
-					world[i][j] = 3
+					self.world[i][j] = 3
 
 		# decrement score by 4
 		newState.score -= 4
