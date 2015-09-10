@@ -10,6 +10,12 @@ class State:
 	south = "south"
 	east = "east"
 	west = "west"
+	act_forward = "forward"
+	act_left = "turn left"
+	act_right = "turn right"
+	act_bash = "bash"
+	act_demolish = "demolish"
+
 
 	def __init__(self, world, posX, posY, goalX, goalY, direction, score , actionList):
 		# global
@@ -55,7 +61,7 @@ class State:
 		newState = State(self)
 
 		# add forward to action list
-		newState.actionList.append("forward")
+		newState.actionList.append(this.act_forward)
 
 		# set new position of agent
 		if self.direction is this.north:
@@ -64,7 +70,7 @@ class State:
 			newState.posX += 1
 		elif self.diretion is this.south:
 			newState.posY += 1
-		elif self.direction is this.west
+		elif self.direction is this.west:
 			newState.posX -= 1
 
 		# decrement score by time complexity of new square
@@ -79,7 +85,7 @@ class State:
 		newState = State(self)
 
 		# add forward to action list
-		newState.actionList.append("turn left")
+		newState.actionList.append(this.act_left)
 
 		# set new position of agent
 		if self.direction is this.north:
@@ -88,7 +94,7 @@ class State:
 			newState.direction = this.north
 		elif self.diretion is this.south:
 			newState.direction = this.east
-		elif self.direction is this.west
+		elif self.direction is this.west:
 			newState.direction = this.south
 
 		# decrement score by 1/3 of time complexity in current square
@@ -104,7 +110,7 @@ class State:
 		newState = State(self)
 
 		# add forward to action list
-		newState.actionList.append("turn right")
+		newState.actionList.append(this.act_right)
 
 		# set new position of agent
 		if self.direction is this.north:
@@ -113,7 +119,7 @@ class State:
 			newState.direction = this.south
 		elif self.diretion is this.south:
 			newState.direction = this.west
-		elif self.direction is this.west
+		elif self.direction is this.west:
 			newState.direction = this.north
 
 		# decrement score by 1/3 of time complexity in current square
@@ -128,7 +134,7 @@ class State:
 		newState = State(self)
 
 		# add forward to action list
-		newState.actionList.append("bash")
+		newState.actionList.append(act_bash)
 
 		# set new position of agent
 		if self.direction is this.north:
@@ -137,7 +143,7 @@ class State:
 			newState.posX += 1
 		elif self.diretion is this.south:
 			newState.posY += 1
-		elif self.direction is this.west
+		elif self.direction is this.west:
 			newState.posX -= 1
 
 		# decrement score by 3
@@ -154,16 +160,16 @@ class State:
 		newState = State(self)
 
 		# add forward to action list
-		newState.actionList.append("demolish")
+		newState.actionList.append(act_demolish)
 
 		# set adjacent squares to 3
 		maxY = len(world)
 		maxX = len(world[0])
 
-		int startPosX = newState.posX is 0 ? 0 : newState.posX-1;
-		int startPosY = newState.posY is 0 ? 0 : newState.posY-1;
-		int endPosX = newState.posX is maxX ? maxX : newState.posX+1;
-		int endPosY = newState.posY is maxY ? maxY : newState.posY+1;
+		startPosX = newState.posX is 0 ? 0 : newState.posX-1;
+		startPosY = newState.posY is 0 ? 0 : newState.posY-1;
+		endPosX = newState.posX is maxX ? maxX : newState.posX+1;
+		endPosY = newState.posY is maxY ? maxY : newState.posY+1;
 
 		for i in range(startPosY, endPosY):
 			for j in range(startPosX, endPosX):
@@ -174,12 +180,4 @@ class State:
 		newState.score -= 4
 
 		return newState
-
-
-
-
-
-
-
-
 

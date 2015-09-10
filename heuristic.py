@@ -19,6 +19,7 @@ def aStar(initialState, heuristic):
             for successorState in nextState.getSuccessors():
                 fringe.push(successorState, -(nextState.getScore() - heuristic(successorState)))
 
+
 def zeroHeuristic(state):
     """0: Returns 0."""
     return 0
@@ -44,6 +45,7 @@ def nonAdmissibleHeuristic(state):
     return admissibelHeuristic(state)*3
 
 def goalDiff(state):
+    """Helper for returning distance to goal."""
     xdiff = abs(state.goalX - state.posX)
     ydiff = abs(state.goalY - state.posY)
     return (xdiff, ydiff)
