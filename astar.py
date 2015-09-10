@@ -1,12 +1,30 @@
 #!/usr/bin/python
 
+""" 
+	astar.py
+
+	See README.md for details.
+	
+"""
+
 import sys
 import os
+from heuristic import *
 from state import State
 
 DEBUG = True
 charStartState = "S"
 charGoalState = "G"
+str_usage = "Usage: python astar.py <input_file>.txt <heuristic 1-6>"
+heuristicDict = {
+	1: zeroHeuristic,
+	2: minHeuristic,
+	3: maxHeuristic,
+	4: addHeuristic,
+	5: admissibleHeuristic,
+	6: nonAdmissibleHeuristic
+}
+
 
 def printWorld(world):
 	print "World loaded: "
@@ -38,17 +56,14 @@ def findCharInWorld(world, charState):
 	for y in range (len(world)):
 		for x in range (len(world[0])):
 			if world[y][x] == charState:
-				print "Found " + charState + "\t y=" + str(y) + ", x=" + str(x) 
-				break #return (1,2) #x, y
-	return y, x
-
+				print "Found " + charState + ": y=" + str(y) + ", x=" + str(x) 
+				return y, x
+	
 def solve(initialState, heuristic):
-	#answer = aStarSearch(initialState, heuristic)
-	#print str(answer)	
-	pass
+	answer = aStar(initialState, heuristic)
+	print str(answer)	
 
-if __name__ == "__main__":
-	str_usage = "Usage: python astar.py <input_file>.txt <heuristic 1-6>"
+def main():
 	num_heuristic = int(sys.argv[2])
 	fileName = sys.argv[1]
 	if len(sys.argv) != 3:
@@ -59,7 +74,11 @@ if __name__ == "__main__":
 		raise IOError("Input file does not exist.")
 	else:
 		world = loadInputFile(fileName)
-		startX, startY = findCharInWorld(world, charStartState)
-		goalX, goalY = findCharInWorld(world, charGoalState)
-		initialState = State() # ( State.north, 0, list() )
-		solve(initialState, None)
+		startY, startX = findCharInWorld(world, charStartState)
+		goalY, goalX = findCharInWorld(world, charGoalState)
+		initialState = State(world, startX, startY, goalX, goalY, State.north, 0, list())
+		solve(initialState, heuristicDict[num_heuristic])
+
+if __name__ == "__main__":
+	main()
+
