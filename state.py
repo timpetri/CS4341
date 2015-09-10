@@ -92,7 +92,7 @@ class State:
 		if not newState.isLegalState():
 			return None
 
-		print "current position is x " + str(newState.posX) + " and y " + str(newState.posY)
+		#print "current position is x " + str(newState.posX) + " and y " + str(newState.posY)
 
 		# decrement score by time complexity of new square
 		newState.score -= self.world[newState.posY][newState.posX]
@@ -122,8 +122,8 @@ class State:
 			return None
 
 		# decrement score by 1/3 of time complexity in current square
-		newState.score -= math.ceil(self.world[newState.posY][newState.posX]/3)
-
+		newState.score -= math.ceil(float(self.world[newState.posY][newState.posX])/3)
+		print "score after turn is " + str(newState.score)
 		return newState
 
 	def performTurnRight(self):
@@ -147,7 +147,7 @@ class State:
 			newState.direction = self.north
 
 		# decrement score by 1/3 of time complexity in current square
-		newState.score -= math.ceil(self.world[newState.posY][newState.posX]/3)
+		newState.score -= math.ceil(float(self.world[newState.posY][newState.posX])/3)
 
 		return newState
 

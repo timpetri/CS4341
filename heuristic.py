@@ -12,14 +12,18 @@ def aStar(initialState, heuristic):
 
 
         nextState = fringe.get()[1]
-
+        print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at cost " + str(nextState.score)
 
         if nextState.isGoalState():
-            return nextState.seqActions()
+            return nextState.actionList
         else:
             for successorState in nextState.getSuccessors():
-                fringe.put((-(nextState.score - heuristic(successorState)), successorState))
+                print "adding state with score " + str(successorState.score)
+                fringe.put((-(successorState.score - heuristic(successorState)), successorState))
 
+            for elem in list(fringe.queue):
+                print(elem[0]),
+            print ""
 
 def zeroHeuristic(state):
     """0: Returns 0."""

@@ -87,7 +87,7 @@ def main():
 		replaceStatesWithNumberOne(world, goalY, goalX)
 		#printWorld(world)
 
-		initialState = State(world, startX, startY, goalX, goalY, State.north, 0, list())
+		initialState = State(world, startX, startY, goalX, goalY, State.north, 100, list())
 		solve(initialState, heuristicDict[num_heuristic])
 
 if __name__ == "__main__":
