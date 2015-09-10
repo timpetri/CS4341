@@ -42,5 +42,10 @@ def addHeuristic(state):
 
     return xdiff + ydiff
 
-def 
+def admissibleHeuristic(state):
+    x, y, z = state.getNextValues();
 
+    return addHeuristic(state) - 1 + min(x, y, z)
+    
+def nonAdmissibleHeuristic(state):
+    return admissibelHeuristic(state)*3
