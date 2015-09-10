@@ -47,10 +47,10 @@ def loadInputFile(fileName):
 		values = line.split("\t")
 		world.append(list())
 		for value in values:
-			if value is charStartState or value is charGoalState:
+			if value == charStartState or value == charGoalState:
 				world[count].append(value)
-			else:
-				world[count].append(int(value))
+			elif value != '' and value != '\n':
+				world[count].append(int(str.rstrip(value)))
 		count += 1
 	printWorld(world)
 	return world
