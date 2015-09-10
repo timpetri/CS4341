@@ -2,7 +2,7 @@
 
 
 ### Work Split:
-	Nicolas Bradford:	astar.py, overall program structure, linking and cleanup
+	Nicolas Bradford:	astar.py, structure
 	Thomas Grimshaw:	test boards, analysis
 	Lucas Lebrao:		heuristic.py
 	Tim Petri:			state.py	
