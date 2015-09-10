@@ -45,6 +45,10 @@ class State:
 	def isGoalState(self):
 		return self.posX == self.goalX and self.posY == self.goalY
 
+	def isLegalState(self):
+		# print "(" + str(self.posX) + ", "+ str(self.posY) +")"
+		return 0 <= self.posY < len(self.world) and 0 <= self.posX < len(self.world[0])
+
 
 	def getSuccessors(self):
 		"""	Params: none
@@ -63,8 +67,8 @@ class State:
 		successors.append(self.performBash())
 		# add demolish
 		successors.append(self.performDemolish())
-		
-		return successors
+
+		return [elt for elt in successors if elt is not None]
 
 	def performForward(self):
 		"""	Params: none
@@ -80,10 +84,15 @@ class State:
 			newState.posY -= 1
 		elif self.direction is self.east:
 			newState.posX += 1
-		elif self.diretion is self.south:
+		elif self.direction is self.south:
 			newState.posY += 1
 		elif self.direction is self.west:
 			newState.posX -= 1
+
+		if not newState.isLegalState():
+			return None
+
+		print "current position is x " + str(newState.posX) + " and y " + str(newState.posY)
 
 		# decrement score by time complexity of new square
 		newState.score -= self.world[newState.posY][newState.posX]
@@ -104,10 +113,13 @@ class State:
 			newState.direction = self.west
 		elif self.direction is self.east:
 			newState.direction = self.north
-		elif self.diretion is self.south:
+		elif self.direction is self.south:
 			newState.direction = self.east
 		elif self.direction is self.west:
 			newState.direction = self.south
+
+		if not newState.isLegalState():
+			return None
 
 		# decrement score by 1/3 of time complexity in current square
 		newState.score -= math.ceil(self.world[newState.posY][newState.posX]/3)
@@ -129,7 +141,7 @@ class State:
 			newState.direction = self.east
 		elif self.direction is self.east:
 			newState.direction = self.south
-		elif self.diretion is self.south:
+		elif self.direction is self.south:
 			newState.direction = self.west
 		elif self.direction is self.west:
 			newState.direction = self.north
@@ -146,17 +158,20 @@ class State:
 		newState = self.copy()
 
 		# add forward to action list
-		newState.actionList.append(act_bash)
+		newState.actionList.append(self.act_bash)
 
 		# set new position of agent
 		if self.direction is self.north:
 			newState.posY -= 1
 		elif self.direction is self.east:
 			newState.posX += 1
-		elif self.diretion is self.south:
+		elif self.direction is self.south:
 			newState.posY += 1
 		elif self.direction is self.west:
 			newState.posX -= 1
+
+		if not newState.isLegalState():
+			return None
 
 		# decrement score by 3
 		newState.score -= 3
@@ -172,7 +187,7 @@ class State:
 		newState = self.copy()
 
 		# add forward to action list
-		newState.actionList.append(act_demolish)
+		newState.actionList.append(self.act_demolish)
 
 		# set adjacent squares to 3
 		maxY = len(self.world)
@@ -185,7 +200,7 @@ class State:
 
 		for i in range(startPosY, endPosY):
 			for j in range(startPosX, endPosX):
-				if i is not newstate.PosY and j is not newState.PosX: # exclude current pos
+				if i is not newState.posY and j is not newState.posX: # exclude current pos
 					self.world[i][j] = 3
 
 		# decrement score by 4

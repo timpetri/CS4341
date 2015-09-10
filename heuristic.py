@@ -3,20 +3,22 @@ from Queue import PriorityQueue
 def aStar(initialState, heuristic):
     visited = []
     fringe = PriorityQueue()
-    fringe.put(initialState, -(initialState.score - heuristic(initialState)))
+    fringe.put((-(initialState.score - heuristic(initialState)), initialState))
 
     while True:
         if fringe.empty():
             print "No Solution"
             return None
 
-        nextState = fringe.get()
+
+        nextState = fringe.get()[1]
+
 
         if nextState.isGoalState():
             return nextState.seqActions()
         else:
             for successorState in nextState.getSuccessors():
-                fringe.put(-(nextState.score - heuristic(successorState)), successorState)
+                fringe.put((-(nextState.score - heuristic(successorState)), successorState))
 
 
 def zeroHeuristic(state):
