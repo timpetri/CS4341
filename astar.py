@@ -31,7 +31,7 @@ def printWorld(world):
 	for line in world:
 		for element in line:
 			print element,
-	print str(world)
+		print ""
 	print ""
 
 def loadInputFile(fileName):
@@ -54,6 +54,9 @@ def loadInputFile(fileName):
 		count += 1
 	printWorld(world)
 	return world
+
+def replaceStatesWithNumberOne(world, y, x):
+	world[y][x] = 1
 
 def findCharInWorld(world, charState):
 	"""Returns a tuple (y,x) of the coordinates of the designated char."""
@@ -80,6 +83,10 @@ def main():
 		world = loadInputFile(fileName)
 		startY, startX = findCharInWorld(world, charStartState)
 		goalY, goalX = findCharInWorld(world, charGoalState)
+		replaceStatesWithNumberOne(world, startY, startX)
+		replaceStatesWithNumberOne(world, goalY, goalX)
+		#printWorld(world)
+
 		initialState = State(world, startX, startY, goalX, goalY, State.north, 0, list())
 		solve(initialState, heuristicDict[num_heuristic])
 
