@@ -46,7 +46,10 @@ def loadInputFile(fileName):
 		values = line.split("\t")
 		world.append(list())
 		for value in values:
-			world[count].append(value)
+			if value is charStartState or value is charGoalState:
+				world[count].append(value)
+			else
+				world[count].append(int(value))
 		count += 1
 	printWorld(world)
 	return world
@@ -60,8 +63,8 @@ def findCharInWorld(world, charState):
 				return y, x
 	
 def solve(initialState, heuristic):
-	answer = aStar(initialState, heuristic)
-	print str(answer)	
+	actionList = aStar(initialState, heuristic)
+	print "List of actions: " + str(actionList)	
 
 def main():
 	num_heuristic = int(sys.argv[2])
