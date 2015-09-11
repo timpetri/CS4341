@@ -60,9 +60,9 @@ class State:
 		# add forward
 		successors.append(self.performForward())
 		# add bash
-		successors.append(self.performRight())
+		successors.append(self.performTurnRight())
 		# add turn left
-		successors.append(self.performLeft())
+		successors.append(self.performTurnLeft())
 		# add turn right
 		successors.append(self.performBash())
 		# add demolish
@@ -97,7 +97,7 @@ class State:
 		
 		return newState
 	
-	def performLeft(self):
+	def performTurnLeft(self):
 		"""	Params: none
 			Return: state after performing turn left action
 		"""
@@ -122,11 +122,11 @@ class State:
 		# decrement score by 1/3 of time complexity in current square
 		newState.score -= int(math.ceil(float(self.world[newState.posY][newState.posX])/3))
 		
-		aftermoveState = newState.performForward()
+		aftermoveState = newState#.performForward()
 		
 		return aftermoveState
 
-	def performRight(self):
+	def performTurnRight(self):
 		"""	Params: none
 			Return: state after performing turn right action
 		"""
@@ -149,7 +149,7 @@ class State:
 		# decrement score by 1/3 of time complexity in current square
 		newState.score -= int(math.ceil(float(self.world[newState.posY][newState.posX])/3))
 
-		return newState.performForward()
+		return newState#.performForward()
 
 	def performBash(self):
 		"""	Params: none
