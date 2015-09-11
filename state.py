@@ -214,6 +214,6 @@ class State:
 		# decrement score by 4
 		newState.score -= 4
 
-		print str(newState.demolishedTiles)
+		#print str(newState.demolishedTiles)
 
 		return newState
