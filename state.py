@@ -59,10 +59,12 @@ class State:
 
 		# add forward
 		successors.append(self.performForward())
-		# add bash
-		successors.append(self.performTurnRight())
-		# add turn left
-		successors.append(self.performTurnLeft())
+
+		if len(self.actionList) == 0 or (self.actionList[-1] is not self.act_left and self.actionList[-1] is not self.act_right):
+			# add bash
+			successors.append(self.performTurnRight())
+			# add turn left
+			successors.append(self.performTurnLeft())
 		# add turn right
 		successors.append(self.performBash())
 		# add demolish
@@ -201,12 +203,17 @@ class State:
 			for j in range(startPosX, endPosX+1):
 				if i is not newState.posY or j is not newState.posX: # exclude current pos
 					newState.world[i][j] = 3
+					newState.demolishedTiles.append((j, i))
+				else:
+					newState.demolishedTiles.append((j, i, "s"))
 				"""add the affected tiles to the list. 
 				Include the center tile even though the value on it did not change. 
 				The paths from it are still affected"""
-				newState.demolishedTiles.append((j, i))
+				
 
 		# decrement score by 4
 		newState.score -= 4
+
+		print str(newState.demolishedTiles)
 
 		return newState

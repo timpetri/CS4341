@@ -17,20 +17,35 @@ def aStar(initialState, heuristic):
         nextState = fringe.get()[1]
 
         #check if the tile has been affected by demolish
-        tileDemolished = (nextState.posX, nextState.posY) in nextState.demolishedTiles
+        if len(nextState.actionList) > 0:
+            if nextState.actionList[-1] is nextState.act_demolish:
+                tileDemolished = (nextState.posX, nextState.posY, "s") in nextState.demolishedTiles
+            else:
+                tileDemolished = (nextState.posX, nextState.posY) in nextState.demolishedTiles
+        else:
+            tileDemolished = False
+        #if len(nextState.actionList) > 0:
+        #    lastAction = nextState.actionList[-1]
+        #else:
+        #    lastAction = None
 
         if nextState.isGoalState():
             #we have reached the goal. Return the relevant stats
             return (nextState.actionList, nextState.score, len(visited))
 
         elif (nextState.posX, nextState.posY, nextState.direction, tileDemolished) not in visited:
-            #print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score),
-           # if len(nextState.actionList) is not 0:
-           #     print str(nextState.actionList)
+            print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score),
+            if len(nextState.actionList) is not 0:
+                print str(nextState.actionList)
             visited.append((nextState.posX, nextState.posY, nextState.direction, tileDemolished))
             for successorState in nextState.getSuccessors():
-                #print "adding state with score " + str(successorState.score)
+                print "adding state with score " + str(successorState.score)
                 fringe.put((-(successorState.score - heuristic(successorState)), successorState))
+
+        else:
+            print "ignoring position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score),
+            if len(nextState.actionList) is not 0:
+                print str(nextState.actionList)
      
 def zeroHeuristic(state):
     """0: Returns 0."""
