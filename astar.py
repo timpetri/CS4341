@@ -44,9 +44,10 @@ def loadInputFile(fileName):
 			if len(value) is not 1:
 				value = value[:1]
 			if value is charStartState or value is charGoalState:
+
 				world[count].append(value)
-			else:
-				world[count].append(int(value))
+			elif value != '' and value != '\n':
+				world[count].append(int(str.rstrip(value)))
 		count += 1
 	#printWorld(world)
 	return world

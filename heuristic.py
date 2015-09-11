@@ -38,7 +38,6 @@ def zeroHeuristic(state):
 def minHeuristic(state):
     xdiff, ydiff = absGoalDiff(state)
     minNum = min(xdiff, ydiff)
-   # print "Min num" + str(minNum)
     return minNum
 
 def maxHeuristic(state):
