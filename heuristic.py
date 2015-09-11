@@ -17,36 +17,24 @@ def aStar(initialState, heuristic):
         nextState = fringe.get()[1]
 
         #check if the tile has been affected by demolish
-        if len(nextState.actionList) > 0:
-            if nextState.actionList[-1] is nextState.act_demolish:
+        if len(nextState.actionList) > 0 and nextState.actionList[-1] is nextState.act_demolish:
                 if (nextState.posX, nextState.posY, "s") in nextState.demolishedTiles:
                     tileDemolished = "S"
-            else:
-                tileDemolished = (nextState.posX, nextState.posY) in nextState.demolishedTiles
         else:
-            tileDemolished = False
-        #if len(nextState.actionList) > 0:
-        #    lastAction = nextState.actionList[-1]
-        #else:
-        #    lastAction = None
+            if (nextState.posX, nextState.posY) in nextState.demolishedTiles:
+                tileDemolished = "D"
+            else:
+                tileDemolished = "N"
 
         if nextState.isGoalState():
             #we have reached the goal. Return the relevant stats
             return (nextState.actionList, nextState.score, len(visited))
 
         elif (nextState.posX, nextState.posY, nextState.direction, tileDemolished) not in visited:
-            #print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score),
-            #if len(nextState.actionList) is not 0:
-                #print str(nextState.actionList)
             visited.append((nextState.posX, nextState.posY, nextState.direction, tileDemolished))
             for successorState in nextState.getSuccessors():
-                #print "adding state with score " + str(successorState.score)
                 fringe.put((-(successorState.score - heuristic(successorState)), successorState))
 
-       # else:
-        #    print "ignoring position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score),
-         #   if len(nextState.actionList) is not 0:
-         #       print str(nextState.actionList)
      
 def zeroHeuristic(state):
     """0: Returns 0."""
@@ -71,27 +59,29 @@ def admissibleHeuristic(state):
     turnCost = 0
 
     if state.direction is state.north:
-        if xdiff is not 0:
-            turnCost +=1
         if ydiff > 0:
             turnCost += 2
+        elif xdiff is not 0:
+            turnCost +=1
+        
 
     if state.direction is state.east:
         if xdiff < 0:
             turnCost += 2
-        if ydiff is not 0:
+        elif ydiff is not 0:
             turnCost +=1
 
     if state.direction is state.south:
-        if xdiff is not 0:
-            turnCost +=1
         if ydiff < 0:
             turnCost += 2
+        elif xdiff is not 0:
+            turnCost +=1
+        
 
     if state.direction is state.west:
         if xdiff > 0:
             turnCost += 2
-        if ydiff is not 0:
+        elif ydiff is not 0:
             turnCost +=1
 
     return addHeuristic(state) + turnCost

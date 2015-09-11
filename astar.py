@@ -82,11 +82,13 @@ def createInitialState(fileName):
 def main():
 	scores = []
 	
-	num_heuristic = int(sys.argv[2])
-	fileName = sys.argv[1]
 	if len(sys.argv) != 3:
 		print "Wrong number of args.\n" + str_usage
-	elif not 0 <= num_heuristic < 7:
+		sys.exit(-1)
+
+	num_heuristic = int(sys.argv[2])
+	fileName = sys.argv[1]
+	if not 0 <= num_heuristic < 7:
 		print "Invalid heuristic: " + sys.argv[2] + "\n" + str_usage
 	elif not os.path.isfile(fileName):
 		raise IOError("Input file does not exist.")

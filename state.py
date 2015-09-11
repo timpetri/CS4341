@@ -60,12 +60,13 @@ class State:
 		# add forward
 		successors.append(self.performForward())
 
+		#if we didnt turn as our last action, then allow us to turn
 		if len(self.actionList) == 0 or (self.actionList[-1] is not self.act_left and self.actionList[-1] is not self.act_right):
-			# add bash
+			# add turn right
 			successors.append(self.performTurnRight())
 			# add turn left
 			successors.append(self.performTurnLeft())
-		# add turn right
+		# add bash
 		successors.append(self.performBash())
 		# add demolish
 		successors.append(self.performDemolish())
@@ -124,7 +125,7 @@ class State:
 		# decrement score by 1/3 of time complexity in current square
 		newState.score -= int(math.ceil(float(self.world[newState.posY][newState.posX])/3))
 		
-		aftermoveState = newState#.performForward()
+		aftermoveState = newState
 		
 		return aftermoveState
 
@@ -151,7 +152,7 @@ class State:
 		# decrement score by 1/3 of time complexity in current square
 		newState.score -= int(math.ceil(float(self.world[newState.posY][newState.posX])/3))
 
-		return newState#.performForward()
+		return newState
 
 	def performBash(self):
 		"""	Params: none
@@ -203,17 +204,13 @@ class State:
 			for j in range(startPosX, endPosX+1):
 				if i is not newState.posY or j is not newState.posX: # exclude current pos
 					newState.world[i][j] = 3
+					#add the affected tiles to the list
 					newState.demolishedTiles.append((j, i))
 				else:
-					newState.demolishedTiles.append((j, i, "s"))
-				"""add the affected tiles to the list. 
-				Include the center tile even though the value on it did not change. 
-				The paths from it are still affected"""
-				
+					#add the center tile to the list as a source demolished tile
+					newState.demolishedTiles.append((j, i, "s"))				
 
 		# decrement score by 4
 		newState.score -= 4
-
-		#print str(newState.demolishedTiles)
 
 		return newState
