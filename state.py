@@ -92,11 +92,9 @@ class State:
 		if not newState.isLegalState():
 			return None
 
-		#print "current position is x " + str(newState.posX) + " and y " + str(newState.posY)
-
 		# decrement score by time complexity of new square
 		newState.score -= self.world[newState.posY][newState.posX]
-
+		
 		return newState
 	
 	def performLeft(self):
@@ -122,9 +120,11 @@ class State:
 			return None
 
 		# decrement score by 1/3 of time complexity in current square
-		newState.score -= math.ceil(float(self.world[newState.posY][newState.posX])/3)
-		print "score after turn is " + str(newState.score)
-		return newState.performForward()
+		newState.score -= int(math.ceil(float(self.world[newState.posY][newState.posX])/3))
+		
+		aftermoveState = newState.performForward()
+		
+		return aftermoveState
 
 	def performRight(self):
 		"""	Params: none
@@ -147,7 +147,7 @@ class State:
 			newState.direction = self.north
 
 		# decrement score by 1/3 of time complexity in current square
-		newState.score -= math.ceil(float(self.world[newState.posY][newState.posX])/3)
+		newState.score -= int(math.ceil(float(self.world[newState.posY][newState.posX])/3))
 
 		return newState.performForward()
 
@@ -195,16 +195,15 @@ class State:
 
 		startPosX = 0 if newState.posX is 0 else newState.posX-1
 		startPosY = 0 if newState.posY is 0 else newState.posY-1
-		endPosX = maxX if newState.posX is maxX else  newState.posX+1
-		endPosY = maxY if newState.posY is maxY else newState.posY+1
-
-		for i in range(startPosY, endPosY):
-			for j in range(startPosX, endPosX):
-				if i is not newState.posY and j is not newState.posX: # exclude current pos
-					self.world[i][j] = 3
+		endPosX = maxX-1 if newState.posX is maxX-1 else  newState.posX+1
+		endPosY = maxY-1 if newState.posY is maxY-1 else newState.posY+1
+		
+		for i in range(startPosY, endPosY+1):
+			for j in range(startPosX, endPosX+1):
+				if i is not newState.posY or j is not newState.posX: # exclude current pos
+					newState.world[i][j] = 3
 
 		# decrement score by 4
 		newState.score -= 4
 
 		return newState
-

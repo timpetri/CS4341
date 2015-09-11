@@ -5,28 +5,35 @@
 
 import random
 
-def saveMap( map ):
+def saveMap( map, filename):
     # Get filename
-    filename = raw_input("Provide a filename: ");
-
+    #filename = raw_input("Provide a filename: ");
+    
     # Open a new file
     fo = open(filename + ".txt", "w");
 
     # Save list into file
     for i in range(len(map)):
         for j in range(len(map[0])):
-            fo.write("%s\t" %(Map[i][j]))
+            fo.write("%s" %(Map[i][j]))
+            if j is not len(map[0]) - 1:
+                fo.write("\t")
         fo.write("\n");
 
 #Declare variables
 over = 0
 action = 0
 
-while over == 0:
+#while over == 0:
     
-    # 1: Declaring Variables
-    columns = input("Enter a number of columns: ");
-    rows = input("Enter a number of rows: ");
+# 1: Declaring Variables
+columns = input("Enter a number of columns: ");
+rows = input("Enter a number of rows: ");
+numMaps = input("Enter number of maps to generate: ")
+filename = raw_input("Provide a filename: ");
+generatedMaps = 0
+
+while generatedMaps is not numMaps:
     # Creates a list containing 2 lists initialized to 0
     Map = [[0 for x in range(columns)] for x in range(rows)]
 
@@ -52,6 +59,9 @@ while over == 0:
             print "%s\t" % Map[i][j],
         print
 
+    saveMap(Map, filename + str(generatedMaps))
+    generatedMaps += 1
+"""
     # 4: Determine user action
     action = 0
     while action == 0 :
@@ -72,3 +82,4 @@ while over == 0:
         else:
             print ("Not a Valid Input!");
     
+"""

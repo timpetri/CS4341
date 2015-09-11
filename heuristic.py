@@ -12,19 +12,24 @@ def aStar(initialState, heuristic):
 
 
         nextState = fringe.get()[1]
-        print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at cost " + str(nextState.score)
+        #printWorld(nextState.world)
+
+        #check if we just demolished
+        if len(nextState.actionList) is not 0:
+            didDemolish = nextState.actionList[-1] is nextState.act_demolish
+        else:
+            didDemolish = False
 
         if nextState.isGoalState():
-            return nextState.actionList
-        else:
+            return (nextState.actionList, nextState.score)
+
+        elif (nextState.posX, nextState.posY, nextState.direction, didDemolish) not in visited:
+            #print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score)
+            visited.append((nextState.posX, nextState.posY, nextState.direction, didDemolish))
             for successorState in nextState.getSuccessors():
                 #print "adding state with score " + str(successorState.score)
                 fringe.put((-(successorState.score - heuristic(successorState)), successorState))
-
-            """for elem in list(fringe.queue):
-                print(elem[0]),
-            print ""
-            """
+     
 
 def zeroHeuristic(state):
     """0: Returns 0."""
@@ -32,7 +37,9 @@ def zeroHeuristic(state):
 
 def minHeuristic(state):
     xdiff, ydiff = absGoalDiff(state)
-    return min(xdiff, ydiff)
+    minNum = min(xdiff, ydiff)
+   # print "Min num" + str(minNum)
+    return minNum
 
 def maxHeuristic(state):
     xdiff, ydiff = absGoalDiff(state)
@@ -86,3 +93,11 @@ def goalDiff(state):
     xdiff = state.goalX - state.posX
     ydiff = state.goalY - state.posY
     return (xdiff, ydiff)
+
+def printWorld(world):
+    print "World loaded: "
+    for line in world:
+        for element in line:
+            print element,
+        print ""
+    print ""
