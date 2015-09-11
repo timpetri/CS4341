@@ -26,8 +26,6 @@ heuristicDict = {
 	6: nonAdmissibleHeuristic
 }
 
-
-
 def loadInputFile(fileName):
 	"""Returns a 2D array"""
 	#if DEBUG: print "Loading..."
@@ -49,7 +47,7 @@ def loadInputFile(fileName):
 			elif value != '' and value != '\n':
 				world[count].append(int(str.rstrip(value)))
 		count += 1
-	#printWorld(world)
+	printWorld(world)
 	return world
 
 def replaceStatesWithNumberOne(world, y, x):
@@ -60,13 +58,15 @@ def findCharInWorld(world, charState):
 	for y in range (len(world)):
 		for x in range (len(world[0])):
 			if world[y][x] == charState:
-				#print "Found " + charState + ": y=" + str(y) + ", x=" + str(x) 
+				print "Found " + charState + ": y=" + str(y) + ", x=" + str(x) 
 				return y, x
 	
 def solve(initialState, heuristic):
-	actionList, score = aStar(initialState, heuristic)
-	print "List of actions: " + str(actionList)	
+	actionList, score, expandedNodes = aStar(initialState, heuristic)
 	print "Score: " + str(score)
+	print "Number of actions: " + str(len(actionList))
+	print "Number of nodes expanded: " + str(expandedNodes)
+	print "List of actions: " + str(actionList)	
 	return score
 
 def createInitialState(fileName):
@@ -75,13 +75,13 @@ def createInitialState(fileName):
 	goalY, goalX = findCharInWorld(world, charGoalState)
 	replaceStatesWithNumberOne(world, startY, startX)
 	replaceStatesWithNumberOne(world, goalY, goalX)
-	#printWorld(world)
+
 	initialState = State(world, startX, startY, goalX, goalY, State.north, 100, list())
 	return initialState
 
 def main():
 	scores = []
-	startTime = time.clock()
+	
 	num_heuristic = int(sys.argv[2])
 	fileName = sys.argv[1]
 	if len(sys.argv) != 3:
@@ -92,20 +92,22 @@ def main():
 		raise IOError("Input file does not exist.")
 	else:
 		initialState = createInitialState(fileName)
-		printWorld(initialState.world)
 		if num_heuristic is 0:
 			n = 1
 			while n <= 6:
-				print "heuristic " + str(n)
-				#initialState = createInitialState(fileName)
+				startTime = time.clock()
+				print "Heuristic " + str(n)
 				scores.append(solve(initialState, heuristicDict[n]))
 				n += 1
-			print str(scores)
+				endTime = time.clock()
+				print "Time elapsed: " + str(endTime - startTime)
+				print
+			print "All scores: " + str(scores)
 		else:
+			startTime = time.clock()
 			solve(initialState, heuristicDict[num_heuristic])
-	endTime = time.clock()
-
-	print endTime - startTime
+			endTime = time.clock()
+			print endTime - startTime
 
 if __name__ == "__main__":
 	main()

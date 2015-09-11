@@ -1,36 +1,37 @@
 from Queue import PriorityQueue
 
 def aStar(initialState, heuristic):
+    #stores a list of visited coords, the direction and whether the tile was affected by demolish
     visited = []
     fringe = PriorityQueue()
+
+    #add the start node to the fringe
     fringe.put((-(initialState.score - heuristic(initialState)), initialState))
 
     while True:
+
         if fringe.empty():
             print "No Solution"
             return None
 
-
         nextState = fringe.get()[1]
-        #printWorld(nextState.world)
 
-        #check if we just demolished
-        if len(nextState.actionList) is not 0:
-            didDemolish = nextState.actionList[-1] is nextState.act_demolish
-        else:
-            didDemolish = False
+        #check if the tile has been affected by demolish
+        tileDemolished = (nextState.posX, nextState.posY) in nextState.demolishedTiles
 
         if nextState.isGoalState():
-            return (nextState.actionList, nextState.score)
+            #we have reached the goal. Return the relevant stats
+            return (nextState.actionList, nextState.score, len(visited))
 
-        elif (nextState.posX, nextState.posY, nextState.direction, didDemolish) not in visited:
-            #print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score)
-            visited.append((nextState.posX, nextState.posY, nextState.direction, didDemolish))
+        elif (nextState.posX, nextState.posY, nextState.direction, tileDemolished) not in visited:
+            #print "checking for position " + str(nextState.posX) + ", " + str(nextState.posY) + " at score " + str(nextState.score),
+           # if len(nextState.actionList) is not 0:
+           #     print str(nextState.actionList)
+            visited.append((nextState.posX, nextState.posY, nextState.direction, tileDemolished))
             for successorState in nextState.getSuccessors():
                 #print "adding state with score " + str(successorState.score)
                 fringe.put((-(successorState.score - heuristic(successorState)), successorState))
      
-
 def zeroHeuristic(state):
     """0: Returns 0."""
     return 0

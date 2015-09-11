@@ -17,7 +17,6 @@ class State:
 	act_bash = "bash"
 	act_demolish = "demolish"
 
-
 	def __init__(self, world, posX, posY, goalX, goalY, direction, score , actionList):
 		# global 2d array
 		self.world = world
@@ -35,6 +34,8 @@ class State:
 		self.score = score
 		self.actionList = actionList
 
+		self.demolishedTiles = []
+
 	def copy(self):
 		"""	Params: none
 			Return: a copy of the 
@@ -48,7 +49,6 @@ class State:
 	def isLegalState(self):
 		# print "(" + str(self.posX) + ", "+ str(self.posY) +")"
 		return 0 <= self.posY < len(self.world) and 0 <= self.posX < len(self.world[0])
-
 
 	def getSuccessors(self):
 		"""	Params: none
@@ -178,7 +178,6 @@ class State:
 
 		return newState.performForward()
 
-
 	def performDemolish(self):
 		"""	Params: none
 			Return: state after performing demolish
@@ -195,13 +194,17 @@ class State:
 
 		startPosX = 0 if newState.posX is 0 else newState.posX-1
 		startPosY = 0 if newState.posY is 0 else newState.posY-1
-		endPosX = maxX-1 if newState.posX is maxX-1 else  newState.posX+1
+		endPosX = maxX-1 if newState.posX is maxX-1 else newState.posX+1
 		endPosY = maxY-1 if newState.posY is maxY-1 else newState.posY+1
 		
 		for i in range(startPosY, endPosY+1):
 			for j in range(startPosX, endPosX+1):
 				if i is not newState.posY or j is not newState.posX: # exclude current pos
 					newState.world[i][j] = 3
+				"""add the affected tiles to the list. 
+				Include the center tile even though the value on it did not change. 
+				The paths from it are still affected"""
+				newState.demolishedTiles.append((j, i))
 
 		# decrement score by 4
 		newState.score -= 4
