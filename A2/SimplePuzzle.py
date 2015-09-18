@@ -1,9 +1,10 @@
 from random import randint, random
+from abstractPuzzle import AbstractPuzzle
 
 """
 Simple example puzzle with necessary functions.
 """
-class SimplePuzzle:
+class SimplePuzzle(AbstractPuzzle):
 
 	def __init__(self):
 		# global 2d array
@@ -37,7 +38,7 @@ class SimplePuzzle:
 
 		return individual
 
-	def fittness(self, individual):
+	def fitness(self, individual):
 		return self.score(individual)
 
 	def score(self, individual):

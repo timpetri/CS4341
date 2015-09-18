@@ -23,7 +23,7 @@ def genAlg(puzzle, maxTime, popSize, strings):
 
 	#create the initial population
 	initialPop = puzzle.generateInitialPopulation(popSize, strings)
-	population = sortPop(initialPop, puzzle.fittness)
+	population = sortPop(initialPop, puzzle.fitness)
 
 	#keep track of the best score
 	bestIndividual = population[0]
@@ -81,10 +81,10 @@ def newGen(population, popSize, puzzle):
 
 		newGen.append(child)
 
-	return sortPop(newGen, puzzle.fittness)
+	return sortPop(newGen, puzzle.fitness)
 
-def sortPop(population, fittnessFunct):
-	sortedPopulation = [ (fittnessFunct(x), x) for x in population]
+def sortPop(population, fitnessFunct):
+	sortedPopulation = [ (fitnessFunct(x), x) for x in population]
 	sortedPopulation = [ x[1] for x in sorted(sortedPopulation, reverse = True)]
 	return sortedPopulation
 
