@@ -3,6 +3,7 @@ import os
 import time
 from Queue import PriorityQueue
 from SimplePuzzle import SimplePuzzle
+from towerPuzzle import TowerPuzzle
 from random import randint, random
 
 isElitism = False
@@ -12,7 +13,7 @@ puzzleDict = {
 	0: SimplePuzzle(),
 	#1: PackingPuzzle,
 	#2: AllocationPuzzle,
-	#3: TowerPuzzle
+	3: TowerPuzzle()
 }
 str_usage = "Usage: python genAlg.py <puzzle 1-3> <puzzle input filename> <runtime (seconds)>"
 
