@@ -1,13 +1,10 @@
 import sys
 import os
 import time
-from Queue import PriorityQueue
+import argparse
 from SimplePuzzle import SimplePuzzle
 from towerPuzzle import TowerPuzzle
-from random import randint, random
-
-isElitism = False
-isCulling = False
+from genAlg import GenAlg
 
 puzzleDict = {
 	0: SimplePuzzle(),
@@ -15,79 +12,6 @@ puzzleDict = {
 	#2: AllocationPuzzle,
 	3: TowerPuzzle()
 }
-str_usage = "Usage: python genAlg.py <puzzle 1-3> <puzzle input filename> <runtime (seconds)>"
-
-def genAlg(puzzle, maxTime, popSize, strings):
-
-	#start a clock to track run time
-	startTime = time.clock()
-
-	#create the initial population
-	initialPop = puzzle.generateInitialPopulation(popSize, strings)
-	population = sortPop(initialPop, puzzle.fitness)
-
-	#keep track of the best score
-	bestIndividual = population[0]
-	bestScore = puzzle.score(bestIndividual)
-	bestIndividualGen = 0
-
-	#create new generations until we run out of time
-	genNum = 1
-	while time.clock()-startTime < maxTime:
-
-		#Generate a new generation
-		population = newGen(population, popSize, puzzle)
-
-		genBest = population[0]
-		genBestScore = puzzle.score(genBest)
-
-		#if the best of this generation beat the best overall record it
-		if genBestScore > bestScore:
-			bestIndividual = genBest
-			bestScore = genBestScore
-			bestIndividualGen = genNum
-
-		genNum += 1
-
-	print "Best scoring was " + str(bestIndividual) + " with score of " + str(bestScore) + " in generation " + str(bestIndividualGen)
-
-
-def newGen(population, popSize, puzzle):
-
-	survivingRatio = .25
-	elitismRatio = .1
-	mutationChance = .05
-
-	newGen = []
-
-	#if we are practicing elitism then keep the top elitismRatio perfromers for the nextGen
-	if isElitism:
-		eliteLen = int(len(population) * elitismRatio)
-		newGen.extend(population[:eliteLen])
-
-	#if we are culling remove the survivingRation worst performers
-	if isCulling:
-		cullLen = int(len(population) * survivingRatio)
-		population = population[:cullLen]
-
-	#generate children until we have hit popsize
-	parentLen = len(population)
-	while len(newGen) < popSize:
-		parent1 = population[randint(0, parentLen-1)]
-		parent2 = population[randint(0, parentLen-1)]
-
-		child = puzzle.createChild(parent1, parent2)
-		if random() < mutationChance:
-			child = puzzle.mutate(child)
-
-		newGen.append(child)
-
-	return sortPop(newGen, puzzle.fitness)
-
-def sortPop(population, fitnessFunct):
-	sortedPopulation = [ (fitnessFunct(x), x) for x in population]
-	sortedPopulation = [ x[1] for x in sorted(sortedPopulation, reverse = True)]
-	return sortedPopulation
 
 def readFile(fileName):
 	inputFile = open(fileName, "r")
@@ -102,22 +26,27 @@ def readFile(fileName):
 def main():
 	scores = []
 
-	if len(sys.argv) != 4:
-		print "Wrong number of args.\n" + str_usage
+	parser = argparse.ArgumentParser()
 
-	#the variable to set the population size for the genetic alg
-	populationSize = 200
+	parser.add_argument("-p", "--popSize", type=int, default=200)
+	parser.add_argument("-c", "--cull", nargs='?', const=0.25, type=float)
+	parser.add_argument("-e", "--elitism", nargs='?', const=0.1, type=float)
+	parser.add_argument("-m", "--mutateChance", default=0.01, type=float)
+	parser.add_argument("puzzleNum", type=int)
+	parser.add_argument("fileName")
+	parser.add_argument("runtime", type=int)
+	args = parser.parse_args()
 
-	puzzleNum = int(sys.argv[1])
-	fileName = sys.argv[2]
-	maxRuntime = int(sys.argv[3])
+	inputLines = readFile(args.fileName)
+	puzzle = puzzleDict[args.puzzleNum]
+	genAlg = GenAlg(puzzle, inputLines, args.popSize, args.elitism, args.cull, args.mutateChance)
 
-	inputLines = readFile(fileName)
+	#start a clock to track run time
+	startTime = time.clock()
+	while time.clock()-startTime < args.runtime:
+		genAlg.newGeneration()
 
-	puzzle = puzzleDict[puzzleNum]
-
-	genAlg(puzzle, maxRuntime, populationSize, inputLines)
-
+	genAlg.recordResults()
 
 if __name__ == "__main__":
 	main()
