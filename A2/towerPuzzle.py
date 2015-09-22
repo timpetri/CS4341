@@ -15,6 +15,7 @@ class TowerPuzzle(AbstractPuzzle):
 	def __init__(self):
 		""" Constructor. The initialTowerList is initialized in generateInitialPopulation()."""
 		self.initialTower = None
+		self.towerDict = None
 
 	def parseInitialTower(self, inputText):
 		"""	Input: Takes inputText in as a list of text file lines.
@@ -35,6 +36,16 @@ class TowerPuzzle(AbstractPuzzle):
 		print "Finished loading input.\n"
 		return _answerList
 
+	def generateTowerDict(self):
+		""""""
+		_answerDict = {}
+		for piece in self.initialTower.pieceList:	
+			if piece in _answerDict:
+				_answerDict[piece] += 1
+			else:
+				_answerDict[piece] = 1
+		return _answerDict
+
 	def generateRandomTower(self):
 		"""	Generates a tower with a random size (>= 2) and random pieces)."""
 		_pieceList = sample(self.initialTower.pieceList, randint(2, len(self.initialTower.pieceList)))
@@ -42,10 +53,11 @@ class TowerPuzzle(AbstractPuzzle):
 
 	def generateInitialPopulation(self, popSize, inputText):
 		""" Input: Takes inputText in as a list of text files lines.
-			Returns: 
+			Returns: a list of Tower objects, comprising the population.
 		"""
 
 		self.initialTower = Tower(self.parseInitialTower(inputText))
+		self.towerDict = self.generateTowerDict()
 		assert self.initialTower.containsDoorAndLookout(), "Error: Tower does not contain a door and lookout."
 		_population = []
 		
@@ -55,11 +67,30 @@ class TowerPuzzle(AbstractPuzzle):
 			print tower
 		return _population
 
+	def createNewCheckDict(self):
+		""" Makes a copy of self.towerDict, to be used for checking during createChild()."""
+		return dict(self.towerDict)
+
 	def createChild(self, parent1, parent2):
 		""" Returns: a child taken by taking the first half of parent1 and the second half of parent2."""
-		child = Tower(parent1.pieceList[:len(parent1.pieceList)/2] + parent2.pieceList[len(parent2.pieceList)/2-1:])
-		print "Created child: " + str(child) + " from parents: " + str(parent1) + " and " + str(parent2)
-		return child
+		
+		_child = Tower([])
+		_checkDict = self.createNewCheckDict()
+		
+		# first, add half of parent1, no need to check
+		for piece in parent1.pieceList[:len(parent1.pieceList)/2]:
+			_child.pieceList.append(piece)
+			_checkDict[piece] -= 1
+		
+		# next, add elements from parent2, must check to make sure no incorrect duplicates
+		for piece in parent2.pieceList[len(parent2.pieceList)/2-1:]:
+			# check child already contains the piece
+			if _checkDict[piece] > 0:
+				_child.pieceList.append(piece)
+				_checkDict[piece] -= 1			
+
+		print "Created child: " + str(_child) + " from parents: " + str(parent1) + " and " + str(parent2)
+		return _child
 
 	def mutate(self, individual):
 		"""	Input: member of the population.
@@ -67,8 +98,8 @@ class TowerPuzzle(AbstractPuzzle):
 				The random change will be a swap of the positions of two pieces in the Tower.
 		"""
 		assert isinstance(individual, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual." 
-		pos1 = randint(0, len(self.initialTower.pieceList) - 1)
-		pos2 = randint(0, len(self.initialTower.pieceList) - 1)
+		pos1 = randint(0, len(individual.pieceList) - 1)
+		pos2 = randint(0, len(individual.pieceList) - 1)
 		individual.pieceList[pos1], individual.pieceList[pos2] = individual.pieceList[pos2], individual.pieceList[pos1]
 		return individual
 
@@ -140,6 +171,12 @@ class Piece():
 	def __str__(self):
 		#return self.pieceType + "\twid:" + str(self.width) + "\tlen:" + str(self.length) + "\tcost:" + str(self.cost)
 		return self.pieceType + " " + str(self.width) + " " + str(self.length) + " " + str(self.cost)
+
+	def __hash__(self):
+		return hash((self.pieceType, self.width, self.length, self.cost))
+
+	def __eq__(self, other):
+		return (self.pieceType, self.width, self.length, self.cost) == (other.pieceType, other.width, other.length, other.cost)
 
 # End class Piece
 
