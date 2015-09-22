@@ -3,6 +3,7 @@ from abstractPuzzle import AbstractPuzzle
 
 """
 Puzzle #1: PackingPuzzle
+Author: Tim Petri
 """
 class PackingPuzzle(AbstractPuzzle):
 
@@ -19,7 +20,7 @@ class PackingPuzzle(AbstractPuzzle):
 
 		print "Target value: " + str(self.targetValue)
 		print "Valid numbers: " + str(self.validNumbers)
-		print "valid numbers length: " + str(len(self.validNumbers))
+		# print "valid numbers length: " + str(len(self.validNumbers))
 
 		population = []
 
@@ -38,7 +39,13 @@ class PackingPuzzle(AbstractPuzzle):
 
 			population.append(individual)
 
+		print "Initial population: "
+		for x in xrange(popSize):
+			print str(x) + ": " + str(population[x])
+
 		return population
+
+
 
 	def createChild(self, parent1, parent2):
 
@@ -47,15 +54,21 @@ class PackingPuzzle(AbstractPuzzle):
 		child.extend(parent1[:len(parent1)/2]) # add first half of parent 1
 		child.extend(parent2[len(parent2)/2:]) # add second half of parent 2
 
+		print "----------------"
+		print "Parent 1 : " + str(parent1)
+		print "Parent 2 : " + str(parent2)
+		print "Child : " + str(child)
+		print "----------------"
+
 		return child
 
 	def mutate(self, individual):
-		pos = randint(0, len(individual)-1)
-		posInValid = randint(0, len(self.validNumbers)-1)
 
 		# pick a random number from valid number that is not already in individual
-		# validMutationOptions = [x for x in self.validNumbers if x not in individual]
-		# individual[pos] = random.choice(validMutationOptions)
+		validMutationOptions = [x for x in self.validNumbers if x not in individual]
+		
+		pos = randint(0, len(individual)-1)
+		posInValid = randint(0, len(validMutationOptions)-1)
 
 		# pick a random number from all valid numbers (could already be in individual)
 		individual[pos] = self.validNumbers[posInValid]
@@ -70,4 +83,7 @@ class PackingPuzzle(AbstractPuzzle):
 		for x in individual:
 			total += x
 
-		return self.targetValue - abs(self.targetValue - total)
+		if total <= self.targetValue:
+			return total
+		else:
+			return 0
