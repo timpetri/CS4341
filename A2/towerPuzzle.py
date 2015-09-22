@@ -113,14 +113,8 @@ class TowerPuzzle(AbstractPuzzle):
 		""" Input: member of the population.
 			Returns: the score of the individual. Returns 0 for invalid individuals."""
 		assert isinstance(individual, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual." 
-		if individual.containsDoorAndLookout():
-			return 1
-		else:
-			return 0
-		#total = 0
-		#for x in individual:
-		#	total += x
-		# 200 - abs(200 - total)
+		return individual.score()
+		
 
 # End class TowerPuzzle
 
@@ -149,6 +143,49 @@ class Tower():
 				break
 		return hasDoor and hasLookout
 
+	def isValidTower(self):
+		isValid = False
+		if len(self.pieceList) >= 2:
+			if(self.pieceList[0].pieceType is Piece._door and self.pieceList[-1].pieceType is Piece._lookout):
+				towerHeight = len(pieceList)
+				position = 0
+
+				while position < towerHeight:
+					piece = pieceList[position]
+					
+					#if the piece is not the top or bottom
+					if position < towerHeight - 1 and position is not 0:
+						#check that the piece is a wall
+						if piece.pieceType is not Piece._wall:
+							break
+
+					#check that the piece has the strength to hold the rest of the tower
+					if piece.strength < towerHeight - (position + 1):
+						break
+
+					if position is not 0:
+						pieceBelow = pieceList[position-1]
+						#check that the width is <= the width of the piece below it
+						if piece.width > pieceBelow.width:
+							break
+
+					position += 1
+
+				if position == towerHeight:
+					isValid = True
+
+		return isValid
+
+	def score(self):
+		score = 0
+		if isValidTower():
+			for piece in self.pieceList:
+				score -= piece.cost
+			score += 10
+			score += (len(self.pieceList) ** 2)
+
+		return score
+
 # End class Tower
 
 class Piece():
@@ -159,18 +196,18 @@ class Piece():
 	_lookout = "Lookout"
 	_pieceTypes = [_door, _wall, _lookout]
 
-	def __init__(self, pieceType, width, length, cost):
-		"""	Input:  pieceType (String), width (int), length (int), cost (int)"""
+	def __init__(self, pieceType, width, strength, cost):
+		"""	Input:  pieceType (String), width (int), strength (int), cost (int)"""
 		assert (pieceType in self._pieceTypes), "Error: Invalid pieceType."
-		assert (width > 0) and (length > 0) and (cost > 0), "Error: width, length, and cost must be greater than 0."
+		assert (width > 0) and (strength > 0) and (cost > 0), "Error: width, strength, and cost must be greater than 0."
 		self.pieceType = pieceType
 		self.width = width
-		self.length = length
+		self.strength = strength
 		self.cost = cost
 
 	def __str__(self):
-		#return self.pieceType + "\twid:" + str(self.width) + "\tlen:" + str(self.length) + "\tcost:" + str(self.cost)
-		return self.pieceType + " " + str(self.width) + " " + str(self.length) + " " + str(self.cost)
+		#return self.pieceType + "\twid:" + str(self.width) + "\tlen:" + str(self.strength) + "\tcost:" + str(self.cost)
+		return self.pieceType + " " + str(self.width) + " " + str(self.strength) + " " + str(self.cost)
 
 	def __hash__(self):
 		return hash((self.pieceType, self.width, self.length, self.cost))
