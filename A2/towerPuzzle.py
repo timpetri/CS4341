@@ -178,7 +178,7 @@ class Tower():
 
 	def score(self):
 		score = 0
-		if isValidTower():
+		if self.isValidTower():
 			for piece in self.pieceList:
 				score -= piece.cost
 			score += 10
@@ -210,10 +210,10 @@ class Piece():
 		return self.pieceType + " " + str(self.width) + " " + str(self.strength) + " " + str(self.cost)
 
 	def __hash__(self):
-		return hash((self.pieceType, self.width, self.length, self.cost))
+		return hash((self.pieceType, self.width, self.strength, self.cost))
 
 	def __eq__(self, other):
-		return (self.pieceType, self.width, self.length, self.cost) == (other.pieceType, other.width, other.length, other.cost)
+		return (self.pieceType, self.width, self.strength, self.cost) == (other.pieceType, other.width, other.length, other.cost)
 
 # End class Piece
 
