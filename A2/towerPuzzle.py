@@ -18,6 +18,9 @@ class TowerPuzzle(AbstractPuzzle):
 		self.initialTower = None
 		self.towerDict = None
 
+	# =============================================================================================
+	# Initial setup
+
 	def parseInitialTower(self, inputText):
 		"""	Input: Takes inputText in as a list of text file lines.
 			Output: A list of pieces that can be used to generate new Towers.
@@ -77,8 +80,12 @@ class TowerPuzzle(AbstractPuzzle):
 		""" Makes a copy of self.towerDict, to be used for checking during createChild()."""
 		return dict(self.towerDict)
 
+
+	# =============================================================================================
+	# Crossovers and Mutation
+
 	def testCreateChild(self):
-		""" Run only with tower0.txt."""
+		""" Unit test for createChild(). Run only with tower0.txt."""
 		door = Piece("Door", 5, 3, 2)
 		wall = Piece("Wall", 5, 5, 1)
 		lookout = Piece("Lookout", 3, 1, 2)
@@ -138,7 +145,11 @@ class TowerPuzzle(AbstractPuzzle):
 		individual.pieceList[pos1], individual.pieceList[pos2] = individual.pieceList[pos2], individual.pieceList[pos1]
 		return individual
 
+	# =============================================================================================
+	# Fitness and scoring
+
 	def testFitness(self):
+		"""	Unit test on the fitness function."""
 		door = Piece("Door", 5, 5, 2)
 		wall = Piece("Wall", 5, 5, 1)
 		lookout = Piece("Lookout", 3, 5, 2)
@@ -232,13 +243,15 @@ class TowerPuzzle(AbstractPuzzle):
 		assert isinstance(individual, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual."
 		return individual.score()
 
-
 # End class TowerPuzzle
 
+
+# =============================================================================================
 class Tower():
 	"""Represents a list of Piece objects, which form a Tower when stacked."""
 
 	def __init__(self, pieceList):
+		"""	Input: list of Pieces."""
 		for piece in pieceList:
 			assert isinstance(piece, Piece), "Error: Passed a non-piece into a Tower() pieceList."
 		self.pieceList = list(pieceList) #make sure that you use all new references
@@ -249,7 +262,6 @@ class Tower():
 
 	def containsDoorAndLookout(self):
 		""" Returns: True if the Tower has a Door and Lookout somewhere in it."""
-
 		hasDoor = False
 		hasLookout = False
 		for piece in self.pieceList:
@@ -296,6 +308,7 @@ class Tower():
 		return isValid
 
 	def score(self):
+		"""	Returns the score of the Tower."""
 		score = 0
 		if self.isValidTower():
 			for piece in self.pieceList:
@@ -307,6 +320,8 @@ class Tower():
 
 # End class Tower
 
+
+# =============================================================================================
 class Piece():
 	"""Represents a piece used to build the tower."""
 
@@ -325,15 +340,19 @@ class Piece():
 		self.cost = int(cost)
 
 	def __str__(self):
+		""" Overrides printing."""
 		#return self.pieceType + "\twid:" + str(self.width) + "\tlen:" + str(self.strength) + "\tcost:" + str(self.cost)
 		return self.pieceType + " " + str(self.width) + " " + str(self.strength) + " " + str(self.cost)
 
 	def __hash__(self):
+		"""	Must implement to use as a key in a dict."""
 		return hash((self.pieceType, self.width, self.strength, self.cost))
 
 	def __eq__(self, other):
+		"""	Must implement to use as a key in a dict."""
 		return (self.pieceType, self.width, self.strength, self.cost) == (other.pieceType, other.width, other.strength, other.cost)
 
 # End class Piece
+
 
 #EOF
