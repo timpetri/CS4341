@@ -31,6 +31,25 @@ class AllocationPuzzle(AbstractPuzzle):
 
 		print "Finished loading input.\n"
 		return numList
+		
+	def arraySplitter(self, p1, p2, index):
+		result = []
+		
+		result = list(p1.orig)[:index]
+		#print 'index ' + str(index)
+		#print 'b1 ' + str(len(p1.orig))
+		temp = list(p2.orig)
+		#print 'b2 ' + str(len(temp))
+		for x in xrange(len(result)):
+			temp.remove(result[x])
+		
+		result.extend(temp)
+		
+		#print 'len ' + str(len(result))
+		#Sprint str(result)
+		
+		return result
+		
 
 	def generateInitialPopulation(self, popSize, inputText):
 		population = []
@@ -48,9 +67,16 @@ class AllocationPuzzle(AbstractPuzzle):
 		return population
 
 	def createChild(self, parent1, parent2):
-		return parent1
+		childList = []
+		
+		index = randint(0, len(parent1.orig))
+		
+		childList = self.arraySplitter(parent1, parent2, index)
+			
+		return Allocation(childList)
 		
 	def mutate(self, individual):
+		
 		return individual
 		
 	def fitness(self, individual): 
