@@ -105,17 +105,16 @@ class PackingPuzzle(AbstractPuzzle):
 		print str(len(individual))
 		print str(self.validNumDict)
 		
-		if len(validMutationOptions) > 0:
-			# index to mutate in individual
-			if len(individual) == 1:
-				pos = randint(0, len(individual)-1)
-			else:
-				pos = 0
+		# index to mutate in individual
+		if len(individual) == 1:
+			pos = randint(0, len(individual)-1)
+		else:
+			pos = 0
 
-			for num in checkDict:
-				if checkDict[num] > 0:
-					individual[pos] = num
-					break
+		for num in checkDict:
+			if checkDict[num] > 0:
+				individual[pos] = num
+				break
 
 
 		return individual
