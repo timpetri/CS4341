@@ -44,9 +44,6 @@ class GenAlg():
 			self.bestScore = genBestScore
 			self.bestIndividualGen = self.genNum
 
-
-
-
 	def generateNewPopulation(self):
 
 		newGen = []
