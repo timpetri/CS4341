@@ -21,7 +21,6 @@ class TowerPuzzle(AbstractPuzzle):
 	def parseInitialTower(self, inputText):
 		"""	Input: Takes inputText in as a list of text file lines.
 			Output: A list of pieces that can be used to generate new Towers.
-
 		"""
 		print "Loading input file..."
 		_answerList = list()
@@ -38,7 +37,7 @@ class TowerPuzzle(AbstractPuzzle):
 		return _answerList
 
 	def generateTowerDict(self):
-		""""""
+		"""	Generate a dictionary to later ensure that there are no duplicates during crossovers."""
 		_answerDict = {}
 		for piece in self.initialTower.pieceList:
 			if piece in _answerDict:
@@ -56,41 +55,65 @@ class TowerPuzzle(AbstractPuzzle):
 		""" Input: Takes inputText in as a list of text files lines.
 			Returns: a list of Tower objects, comprising the population.
 		"""
-
 		self.initialTower = Tower(self.parseInitialTower(inputText))
 		self.towerDict = self.generateTowerDict()
-		assert self.initialTower.containsDoorAndLookout(), "Error: Tower does not contain a door and lookout."
+		assert self.initialTower.containsDoorAndLookout(), "Error: NO SOLUTION, Tower does not contain a door and lookout."
 		_population = []
 
+		print "Initial population:"
 		for i in xrange(popSize):
 			_population.append(self.generateRandomTower())
 		for tower in _population:
 			print tower
+		print ""
+		
+		#self.testCreateChild()
+		#print "END TEST"
+		#sys.exit(0)
 		return _population
 
 	def createNewCheckDict(self):
 		""" Makes a copy of self.towerDict, to be used for checking during createChild()."""
 		return dict(self.towerDict)
 
+	def testCreateChild(self):
+		""" Run only with tower0.txt."""
+		door = Piece("Door", 5, 3, 2)
+		wall = Piece("Wall", 5, 5, 1)
+		lookout = Piece("Lookout", 3, 1, 2)
+
+		par1 = Tower([door, lookout, wall, wall])
+		par2 = Tower([wall, wall, lookout, door])
+		print str(self.createChild(par1, par2))
+
+		par1 = Tower([wall, wall, lookout, door])
+		par2 = Tower([wall, wall])
+		print str(self.createChild(par1, par2))
+
+
 	def createChild(self, parent1, parent2):
 		""" Returns: a child taken by taking the first half of parent1 and the second half of parent2."""
-
+		assert isinstance(parent1, Tower) and isinstance(parent2, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual." 
 		_child = Tower([])
 		_checkDict = self.createNewCheckDict()
 
 		# first, add half of parent1, no need to check
+		#print "PARENT 1: "
 		for piece in parent1.pieceList[:len(parent1.pieceList)/2]:
 			_child.pieceList.append(piece)
 			_checkDict[piece] -= 1
+			#print str(piece)
 
+		#print "PARENT 2: "
 		# next, add elements from parent2, must check to make sure no incorrect duplicates
 		for piece in parent2.pieceList[len(parent2.pieceList)/2-1:]:
 			# check child already contains the piece
 			if _checkDict[piece] > 0:
 				_child.pieceList.append(piece)
 				_checkDict[piece] -= 1
+				#print piece
 
-		print "Created child: " + str(_child) + " from parents: " + str(parent1) + " and " + str(parent2)
+		#print "Created child: " + str(_child) + " from parents: " + str(parent1) + " and " + str(parent2)
 		return _child
 
 	def mutate(self, individual):
@@ -128,6 +151,7 @@ class Tower():
 		self.pieceList = list(pieceList) #make sure that you use all new references
 
 	def __str__(self):
+		""" Overrides printing."""
 		return str([str(x) for x in self.pieceList])
 
 	def containsDoorAndLookout(self):
@@ -145,6 +169,7 @@ class Tower():
 		return hasDoor and hasLookout
 
 	def isValidTower(self):
+		""" Returns true if the tower is valid."""
 		isValid = False
 		if len(self.pieceList) >= 2:
 			if self.pieceList[0].pieceType == Piece._door and self.pieceList[-1].pieceType == Piece._lookout:
@@ -214,7 +239,7 @@ class Piece():
 		return hash((self.pieceType, self.width, self.strength, self.cost))
 
 	def __eq__(self, other):
-		return (self.pieceType, self.width, self.strength, self.cost) == (other.pieceType, other.width, other.length, other.cost)
+		return (self.pieceType, self.width, self.strength, self.cost) == (other.pieceType, other.width, other.strength, other.cost)
 
 # End class Piece
 
