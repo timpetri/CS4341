@@ -51,13 +51,22 @@ class PackingPuzzle(AbstractPuzzle):
 
 		child = []
 
-		child.extend(parent1[:len(parent1)/2]) # add first half of parent 1
-		child.extend(parent2[len(parent2)/2:]) # add second half of parent 2
+		if len(parent1) > 2:
+			index1 = randint(1, len(parent1)-2)
+		else:
+			index1 = len(parent1)/2
+		if len(parent2) > 2:
+			index2 = randint(1, len(parent2)-2)
+		else:
+			index2 = len(parent2)/2
+
+		child.extend(parent1[:index1]) # add first half of parent 1
+		child.extend([x for x in parent2[index2:] if x not in child]) # add second half of parent 2
 
 		print "----------------"
 		print "Parent 1 : " + str(parent1)
 		print "Parent 2 : " + str(parent2)
-		print "Child : " + str(child)
+		print "Child1 : " + str(child1)	
 		print "----------------"
 
 		return child
