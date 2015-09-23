@@ -88,7 +88,7 @@ class PackingPuzzle(AbstractPuzzle):
 		print "----------------"
 		print "Parent 1 : " + str(parent1)
 		print "Parent 2 : " + str(parent2)
-		print "Child : " + str(child)	
+		print "Child : " + str(child) + " with score " + str(self.score(child))
 		print "----------------"
 
 		return child
@@ -123,10 +123,12 @@ class PackingPuzzle(AbstractPuzzle):
 		total = 0
 		for x in individual:
 			total += x
-		if total <= self.targetValue:
+
+		return self.targetValue - abs(self.targetValue - total)
+		"""if total <= self.targetValue:
 			return total
 		else:
-			return -total
+			return -total"""
 
 	def score(self, individual):
 		total = 0
