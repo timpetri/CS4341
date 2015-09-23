@@ -5,7 +5,7 @@ import argparse
 from SimplePuzzle import SimplePuzzle
 from towerPuzzle import TowerPuzzle
 from packingPuzzle import PackingPuzzle
-from allocationPuzzle import AllocationPuzzle
+#from allocationPuzzle import AllocationPuzzle
 from genAlg import GenAlg
 
 puzzleDict = {
