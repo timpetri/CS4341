@@ -1,4 +1,4 @@
-from random import randint, random, uniform
+from random import randint, random, uniform, shuffle
 from abstractPuzzle import AbstractPuzzle
 
 """
@@ -10,7 +10,7 @@ class AllocationPuzzle(AbstractPuzzle):
 		# global 2d array
 		self.test = 1
 
-	def checkValid(num):
+	def checkValid(self, num):
 		if -10 <= num <= 10:
 			return True
 		return False
@@ -23,8 +23,8 @@ class AllocationPuzzle(AbstractPuzzle):
 		# Input text
 		for line in inputText:
 			num = float(line)
-			if (checkValid(num)):
-				numList.append(line)
+			if (self.checkValid(num)):
+				numList.append(num)
 			else:
 				print "Invalid input was given"
 				return null
@@ -35,52 +35,71 @@ class AllocationPuzzle(AbstractPuzzle):
 	def generateInitialPopulation(self, popSize, inputText):
 		population = []
 		
-		self.initialAllocation = Allocation(self.parseInitialList(inputText))
+		startList = self.parseInitialList(inputText)
 		self.popSize = popSize
-		
-		population.append(self.initialAllocation)
 
+		for x in xrange(popSize):
+			
+			copyList = startList
+			shuffle(copyList)
+			individual = Allocation(copyList)
+			population.append(individual)
+		
 		return population
 
 	def createChild(self, parent1, parent2):
+		return parent1
 		
 	def mutate(self, individual):
+		return individual
 		
-	def fitness(self, individual):       
+	def fitness(self, individual): 
 		return self.score(individual)
 		
 	def score(self, individual):
 		total = 0
-
+		bin1Total = 0
+		bin2Total = 0
+		first = True
+		
 		assert isinstance(individual, Allocation), "allocationPuzzle().score() Error: Invalid input for individual."
-
+			
 		for x in individual.bin1:
-			total = total * x
+			if (first):
+				first = False
+				bin1Total = x
+			else:
+				bin1Total *= x
 			
 		for x in individual.bin2:
-			total = total + x
+			bin2Total += x
 			
+		total = (bin1Total+bin2Total)/2
+		
 		return total;
 
 
 class Allocation():
 
-	def __init__(self, numList):
+	def __init__(self, inputList):
 
-		self.orig = numlist
+		self.orig = inputList
 		self.bin1 = []
 		self.bin2 = []
 		self.bin3 = []
 		
 		for x in xrange(30):
 			if x < 10:
-				bin1.append(numList[x])
-			else if x < 20:
-				bin2.append(numList[x])
+				self.bin1.append(inputList[x])
+			elif x < 20:
+				self.bin2.append(inputList[x])
 			else:
-				bin3.append(numList[x])
-		
-		
+				self.bin3.append(inputList[x])
 		
 	
-	
+	def __str__ (self):
+		output =  'bin1 ' + str(['{:.1f}'.format(x) for x in self.bin1]) + '\n'
+		output += 'bin2 ' + str(['{:.1f}'.format(x) for x in self.bin2]) + '\n'
+		output += 'bin3 ' + str(['{:.1f}'.format(x) for x in self.bin3]) + '\n'
+		return output
+		
