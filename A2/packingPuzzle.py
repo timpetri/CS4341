@@ -9,6 +9,7 @@ class PackingPuzzle(AbstractPuzzle):
 
 	targetValue = 0
 	validNumbers = []
+	validNumDict = {}
 
 	def __init__(self):
 		self.test = 1
@@ -17,6 +18,7 @@ class PackingPuzzle(AbstractPuzzle):
 			
 		self.targetValue = int(inputText[0].strip()) # get first element
 		self.validNumbers = map(lambda s: int(s.strip()), inputText[1:]) # rest of lines are valid numbers
+		self.validNumDict = self.generateNumDict() # keep track of count of the valid numbers
 
 		print "Target value: " + str(self.targetValue)
 		print "Valid numbers: " + str(self.validNumbers)
@@ -45,7 +47,17 @@ class PackingPuzzle(AbstractPuzzle):
 
 		return population
 
+	def generateNumDict(self):
+		_answerDict = {}
+		for num in self.validNumbers:
+			if num in _answerDict:
+				_answerDict[num] += 1
+			else:
+				_answerDict[num] = 1
+		return _answerDict
 
+	def createNewNumDict(self):
+		return dict(self.validNumDict)
 
 	def createChild(self, parent1, parent2):
 
@@ -60,8 +72,18 @@ class PackingPuzzle(AbstractPuzzle):
 		else:
 			index2 = len(parent2)/2
 
-		child.extend(parent1[:index1]) # add first half of parent 1
-		child.extend([x for x in parent2[index2:] if x not in child]) # add second half of parent 2
+		checkDict = self.createNewNumDict()
+
+		child.extend(parent1[:index1])
+
+		for x in child:
+			checkDict[x] -= 1
+
+		# only add
+		for x in parent2[index2:]:
+			if checkDict[x] > 0:
+				child.append(x)
+				checkDict[x] -= 1
 
 		print "----------------"
 		print "Parent 1 : " + str(parent1)
@@ -73,15 +95,28 @@ class PackingPuzzle(AbstractPuzzle):
 
 	def mutate(self, individual):
 
-		# pick a random number from valid number that is not already in individual
-		validMutationOptions = [x for x in self.validNumbers if x not in individual]
+
+		checkDict = self.createNewNumDict()
+
+		for x in individual:
+			checkDict[x] -= 1
+
+
+		print str(len(individual))
+		print str(self.validNumDict)
 		
 		if len(validMutationOptions) > 0:
-			pos = randint(0, len(individual)-1)
-			posInValid = randint(0, len(validMutationOptions)-1)
+			# index to mutate in individual
+			if len(individual) == 1:
+				pos = randint(0, len(individual)-1)
+			else:
+				pos = 0
 
-			# pick a random number from all valid numbers (could already be in individual)
-			individual[pos] = self.validNumbers[posInValid]
+			for num in checkDict:
+				if checkDict[num] > 0:
+					individual[pos] = num
+					break
+
 
 		return individual
 
