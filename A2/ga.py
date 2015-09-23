@@ -11,7 +11,7 @@ from genAlg import GenAlg
 puzzleDict = {
 	0: SimplePuzzle(),
 	1: PackingPuzzle(),
-	2: AllocationPuzzle(),
+	#2: AllocationPuzzle(),
 	3: TowerPuzzle()
 }
 
@@ -30,7 +30,7 @@ def main():
 
 	parser = argparse.ArgumentParser()
 
-	parser.add_argument("-p", "--popSize", type=int, default=200)
+	parser.add_argument("-p", "--popSize", type=int, default=20)
 	parser.add_argument("-c", "--cull", nargs='?', const=0.25, type=float)
 	parser.add_argument("-e", "--elitism", nargs='?', const=0.1, type=float)
 	parser.add_argument("-m", "--mutateChance", default=0.01, type=float)
