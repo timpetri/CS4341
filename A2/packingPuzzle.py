@@ -66,7 +66,7 @@ class PackingPuzzle(AbstractPuzzle):
 		print "----------------"
 		print "Parent 1 : " + str(parent1)
 		print "Parent 2 : " + str(parent2)
-		print "Child1 : " + str(child1)	
+		print "Child : " + str(child)	
 		print "----------------"
 
 		return child
@@ -76,16 +76,23 @@ class PackingPuzzle(AbstractPuzzle):
 		# pick a random number from valid number that is not already in individual
 		validMutationOptions = [x for x in self.validNumbers if x not in individual]
 		
-		pos = randint(0, len(individual)-1)
-		posInValid = randint(0, len(validMutationOptions)-1)
+		if len(validMutationOptions) > 0:
+			pos = randint(0, len(individual)-1)
+			posInValid = randint(0, len(validMutationOptions)-1)
 
-		# pick a random number from all valid numbers (could already be in individual)
-		individual[pos] = self.validNumbers[posInValid]
+			# pick a random number from all valid numbers (could already be in individual)
+			individual[pos] = self.validNumbers[posInValid]
 
 		return individual
 
 	def fitness(self, individual):
-		return self.score(individual)
+		total = 0
+		for x in individual:
+			total += x
+		if total <= self.targetValue:
+			return total
+		else:
+			return -total
 
 	def score(self, individual):
 		total = 0
