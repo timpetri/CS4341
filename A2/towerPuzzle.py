@@ -60,16 +60,17 @@ class TowerPuzzle(AbstractPuzzle):
 		assert self.initialTower.containsDoorAndLookout(), "Error: NO SOLUTION, Tower does not contain a door and lookout."
 		_population = []
 
-		print "Initial population:"
+		print "Generating population..."
 		for i in xrange(popSize):
 			_population.append(self.generateRandomTower())
-		for tower in _population:
-			print tower
-		print ""
+		#for tower in _population:
+		#	print tower
+		print "Finished generating population."
 		
 		#self.testCreateChild()
-		#print "END TEST"
-		#sys.exit(0)
+		self.testFitness()
+		print "END TEST"
+		sys.exit(0)
 		return _population
 
 	def createNewCheckDict(self):
@@ -127,11 +128,81 @@ class TowerPuzzle(AbstractPuzzle):
 		individual.pieceList[pos1], individual.pieceList[pos2] = individual.pieceList[pos2], individual.pieceList[pos1]
 		return individual
 
+	def testFitness(self):
+		door = Piece("Door", 5, 3, 2)
+		wall = Piece("Wall", 5, 5, 1)
+		lookout = Piece("Lookout", 3, 1, 2)
+
+		examples = {
+			Tower([door, lookout, wall, wall]) : 2,
+			Tower([wall, wall, lookout, door]) : 0,
+			#Tower([wall, wall, door, lookout]) : 1,
+			Tower([door, wall, wall, lookout]) : 20 * 10,
+			Tower([door, wall, lookout, wall, lookout]) : 4,
+				
+		}
+		for tower in examples:
+			assert self.fitness(tower) == examples[tower], "fitness produced " + str(self.fitness(tower)) + " instead of " + str(examples[tower])
+
+
 	def fitness(self, individual):
 		"""	Input: member of the population.
 			Returns: the fitness of the individual (not necessarily the score)."""
 		assert isinstance(individual, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual."
-		return self.score(individual)
+		_fitness = 0
+		_count = 0
+		# we get very excited for solutions that we find
+		if individual.score() != 0:
+			return individual.score() * 10
+		# approach from both top and bottom, looking for a string of valid pieces
+		else:
+			# approach from bottom up
+			if individual.pieceList[0].pieceType == Piece._door:
+				towerHeight = len(individual.pieceList)
+				position = 0
+
+				while position < towerHeight:
+					_fitness += 1
+					piece = individual.pieceList[position]
+
+					#if the piece is not the top or bottom
+					if position < towerHeight - 1 and position is not 0:
+						#check that the piece is a wall
+						if piece.pieceType != Piece._wall:
+							break
+					#check that the piece has the strength to hold the rest of the tower
+					if piece.strength < towerHeight - (position + 1):
+						break
+					if position is not 0:
+						pieceBelow = individual.pieceList[position-1]
+						#check that the width is <= the width of the piece below it
+						if piece.width > pieceBelow.width:
+							break
+					position += 1		
+			# approach from top down
+			if individual.pieceList[-1].pieceType == Piece._lookout:				
+				towerHeight = len(individual.pieceList)
+				position = towerHeight - 1
+
+				while position >= 0:
+					_fitness += 1
+					piece = individual.pieceList[position]
+
+					#if the piece is not the top or bottom
+					if position < towerHeight - 1 and position is not 0:
+						#check that the piece is a wall
+						if piece.pieceType != Piece._wall:
+							break
+					#check that the piece has the strength to hold the rest of the tower
+					if piece.strength < towerHeight - (position + 1):
+						break
+					if position is not 0:
+						pieceBelow = individual.pieceList[position-1]
+						#check that the width is <= the width of the piece below it
+						if piece.width > pieceBelow.width:
+							break
+					position -= 1		
+			return _fitness
 
 	def score(self, individual):
 		""" Input: member of the population.
