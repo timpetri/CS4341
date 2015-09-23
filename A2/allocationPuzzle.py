@@ -36,17 +36,12 @@ class AllocationPuzzle(AbstractPuzzle):
 		result = []
 		
 		result = list(p1.orig)[:index]
-		#print 'index ' + str(index)
-		#print 'b1 ' + str(len(p1.orig))
 		temp = list(p2.orig)
-		#print 'b2 ' + str(len(temp))
+
 		for x in xrange(len(result)):
 			temp.remove(result[x])
 		
 		result.extend(temp)
-		
-		#print 'len ' + str(len(result))
-		#Sprint str(result)
 		
 		return result
 		
@@ -63,6 +58,7 @@ class AllocationPuzzle(AbstractPuzzle):
 			shuffle(copyList)
 			individual = Allocation(copyList)
 			population.append(individual)
+			print "Score: " + str(self.score(individual))
 		
 		return population
 
@@ -70,17 +66,37 @@ class AllocationPuzzle(AbstractPuzzle):
 		childList = []
 		
 		index = randint(0, len(parent1.orig))
-		
 		childList = self.arraySplitter(parent1, parent2, index)
-			
+		"""
+		print "----------------"
+		print "Index : " + str(index)
+		print "Parent 1 : " + str(parent1.orig)
+		print "Parent 2 : " + str(parent2.orig)
+		print "   Child : " + str(childList)	
+		print "----------------"
+		"""
+		
 		return Allocation(childList)
 		
 	def mutate(self, individual):
+		childList = []
+		
+		for val in individual.orig:
+			if randint(0, 99) < 5:
+				childList.append(uniform(-10, 10))
+			else:
+				childList.append(val)		
 		
 		return individual
 		
 	def fitness(self, individual): 
-		return self.score(individual)
+		#return self.score(individual)
+		total = 0
+		
+		for val in individual.bin3:
+			total -= abs(val)
+	
+		return total
 		
 	def score(self, individual):
 		total = 0
@@ -109,15 +125,15 @@ class Allocation():
 
 	def __init__(self, inputList):
 
-		self.orig = inputList
+		self.orig = list(inputList)
 		self.bin1 = []
 		self.bin2 = []
 		self.bin3 = []
 		
-		for x in xrange(30):
-			if x < 10:
+		for x in xrange(len(inputList)):
+			if x % 3 == 1:
 				self.bin1.append(inputList[x])
-			elif x < 20:
+			elif x % 3 == 2:
 				self.bin2.append(inputList[x])
 			else:
 				self.bin3.append(inputList[x])
