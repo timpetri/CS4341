@@ -97,24 +97,34 @@ class TowerPuzzle(AbstractPuzzle):
 		assert isinstance(parent1, Tower) and isinstance(parent2, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual." 
 		_child = Tower([])
 		_checkDict = self.createNewCheckDict()
+		pos1 = randint(1, len(parent1.pieceList) - 1)
+		pos2 = randint(0, len(parent2.pieceList) - 2)
 
 		# first, add half of parent1, no need to check
 		#print "PARENT 1: "
-		for piece in parent1.pieceList[:len(parent1.pieceList)/2]:
+		for piece in parent1.pieceList[:pos1]:
 			_child.pieceList.append(piece)
 			_checkDict[piece] -= 1
 			#print str(piece)
 
 		#print "PARENT 2: "
 		# next, add elements from parent2, must check to make sure no incorrect duplicates
-		for piece in parent2.pieceList[len(parent2.pieceList)/2-1:]:
-			# check child already contains the piece
+		for piece in parent2.pieceList[pos2:]:
+			# if child doesn't already contain the piece, add it
 			if _checkDict[piece] > 0:
 				_child.pieceList.append(piece)
 				_checkDict[piece] -= 1
 				#print piece
+			# if child already contains the piece, add a random piece instead
+			else:
+				for piece in _checkDict:
+					if _checkDict[piece] > 0:
+						_child.pieceList.append(piece)
+						_checkDict[piece] -= 1
+						break
 
 		#print "Created child: " + str(_child) + " from parents: " + str(parent1) + " and " + str(parent2)
+		print str(_child) + '\n'
 		return _child
 
 	def mutate(self, individual):
