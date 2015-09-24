@@ -97,11 +97,11 @@ class PackingPuzzle(AbstractPuzzle):
 				child.append(x)
 				checkDict[x] -= 1
 
-		# print "----------------"
-		# print "Parent 1 : " + str(parent1)
-		# print "Parent 2 : " + str(parent2)
-		# print "Child : " + str(child)
-		# print "----------------"
+		#print "----------------"
+		#print "Parent 1 : " + str(parent1)
+		#print "Parent 2 : " + str(parent2)
+		#print "Child : " + str(child)
+		#print "----------------"
 
 		return child
 
