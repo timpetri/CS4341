@@ -12,25 +12,23 @@ class PackingPuzzle(AbstractPuzzle):
 	validNumbers = []
 	validNumDict = {}
 
-	def __init__(self):
-		self.test = 1
-
-	def generateInitialPopulation(self, popSize, inputText):
-		"""	Input: Takes inputText in as a list of text file lines.
-			Output: A list of randomly generated individuals, each being an array of numbers.
-		"""
-
+	def __init__(self, inputText, popSize):
+		"""Initializes the class with the inputText and popSize and creates a list of valid numbers"""
+		self.popSize = popSize
 		self.targetValue = int(inputText[0].strip()) # get first element
 		self.validNumbers = map(lambda s: int(s.strip()), inputText[1:]) # rest of lines are valid numbers
 		self.validNumDict = self.generateNumDict() # keep track of count of the valid numbers
 
 		print "Target value: " + str(self.targetValue)
 		print "Valid numbers: " + str(self.validNumbers)
-		# print "valid numbers length: " + str(len(self.validNumbers))
 
+	def generateInitialPopulation(self):
+		"""	Input: Takes inputText in as a list of text file lines.
+			Output: A list of randomly generated individuals, each being an array of numbers.
+		"""
 		population = []
 
-		for x in xrange(popSize):
+		for x in xrange(self.popSize):
 
 			individual = []
 			lengthOfIndividual = randint(1, len(self.validNumbers)-1)
@@ -45,9 +43,9 @@ class PackingPuzzle(AbstractPuzzle):
 
 			population.append(individual)
 
-		print "Initial population: "
-		for x in xrange(popSize):
-			print str(x) + ": " + str(population[x])
+		#print "Initial population: "
+		#for x in xrange(popSize):
+		#	print str(x) + ": " + str(population[x])
 
 		return population
 
@@ -117,8 +115,8 @@ class PackingPuzzle(AbstractPuzzle):
 			checkDict[x] -= 1
 
 
-		print str(len(individual))
-		print str(self.validNumDict)
+		#print str(len(individual))
+		#print str(self.validNumDict)
 
 		# index to mutate in individual
 		if len(individual) != 1:
