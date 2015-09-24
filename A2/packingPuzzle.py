@@ -123,10 +123,12 @@ class PackingPuzzle(AbstractPuzzle):
 		total = 0
 		for x in individual:
 			total += x
-		if total <= self.targetValue:
+
+		return self.targetValue - abs(self.targetValue - total)
+		"""if total <= self.targetValue:
 			return total
 		else:
-			return -total
+			return -total"""
 
 	def score(self, individual):
 		total = 0
