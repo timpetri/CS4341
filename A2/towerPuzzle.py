@@ -69,7 +69,7 @@ class TowerPuzzle(AbstractPuzzle):
 		#for tower in _population:
 		#	print tower
 		print "Finished generating population."
-
+		print "Working..."
 		#self.testCreateChild()
 		#self.testFitness()
 		#print "END TEST"
