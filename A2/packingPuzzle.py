@@ -106,7 +106,7 @@ class PackingPuzzle(AbstractPuzzle):
 		print str(self.validNumDict)
 
 		# index to mutate in individual
-		if len(individual) == 1:
+		if len(individual) != 1:
 			pos = randint(0, len(individual)-1)
 		else:
 			pos = 0
