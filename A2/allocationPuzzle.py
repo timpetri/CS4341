@@ -6,9 +6,9 @@ Puzzle 2: Number Allocation
 """
 class AllocationPuzzle(AbstractPuzzle):
 
-	def __init__(self):
-		# global 2d array
-		self.test = 1
+	def __init__(self, inputText, popSize):
+		self.startList = self.parseInitialList(inputText)
+		self.popSize = popSize
 
 	def checkValid(self, num):
 		if -10 <= num <= 10:
@@ -46,15 +46,13 @@ class AllocationPuzzle(AbstractPuzzle):
 		return result
 
 
-	def generateInitialPopulation(self, popSize, inputText):
+	def generateInitialPopulation(self):
 		population = []
+		
 
-		startList = self.parseInitialList(inputText)
-		self.popSize = popSize
+		for x in xrange(self.popSize):
 
-		for x in xrange(popSize):
-
-			copyList = startList
+			copyList = self.startList
 			shuffle(copyList)
 			individual = Allocation(copyList)
 			population.append(individual)

@@ -2,7 +2,7 @@ from random import randint, random, uniform, shuffle
 
 class GenAlg():
 
-	def __init__(self, puzzle, inputLines, popSize, elitismRatio, cullRatio, mutateRatio):
+	def __init__(self, puzzle, popSize, elitismRatio, cullRatio, mutateRatio):
 		self.puzzle = puzzle
 		self.popSize = popSize
 		self.elitismRatio = elitismRatio
@@ -15,7 +15,7 @@ class GenAlg():
 		self.population = []
 
 		#create the initial population
-		initialPop = puzzle.generateInitialPopulation(popSize, inputLines)
+		initialPop = puzzle.generateInitialPopulation()
 		for ind in initialPop:
 			self.population.append((puzzle.fitness(ind), ind))
 		self.population = self.sortPop(self.population)
@@ -30,7 +30,6 @@ class GenAlg():
 		#Generate a new generation
 
 		self.generateNewPopulation()
-
 
 		#Score the population as we have the fittness right now
 		scoredPop = []
