@@ -3,7 +3,7 @@
 
 ### Work Split:
 	Nicolas Bradford:	Puzzle 3
-	Thomas Grimshaw:	ga.py, genAlg.py, Framework, Misc.
+	Thomas Grimshaw:	GA Framework, Misc.
 	Lucas Lebrao:		Puzzle 2
 	Tim Petri:			Puzzle 1
 
