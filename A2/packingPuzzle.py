@@ -1,5 +1,6 @@
 from random import randint, random, shuffle, choice
 from abstractPuzzle import AbstractPuzzle
+import sys
 
 """
 Puzzle #1: PackingPuzzle
@@ -111,11 +112,15 @@ class PackingPuzzle(AbstractPuzzle):
 		else:
 			pos = 0
 
+		validChoices = []
+
 		for num in checkDict:
 			if checkDict[num] > 0:
-				individual[pos] = num
-				break
+				validChoices.append(num)
 
+		posInValidChoices = randint(0, len(validChoices)-1)
+
+		individual[pos] = validChoices[posInValidChoices]
 
 		return individual
 
