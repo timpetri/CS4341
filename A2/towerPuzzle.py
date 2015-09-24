@@ -13,10 +13,11 @@ from abstractPuzzle import AbstractPuzzle
 class TowerPuzzle(AbstractPuzzle):
 	"""Puzzle 3: TowerPuzzle"""
 
-	def __init__(self):
-		""" Constructor. The initialTowerList is initialized in generateInitialPopulation()."""
-		self.initialTower = None
+	def __init__(self, inputText, popSize):
+		""" Constructor. Creates the initialTowerList from the input text."""
 		self.towerDict = None
+		self.initialTower = Tower(self.parseInitialTower(inputText))
+		self.popSize = popSize
 
 	# =============================================================================================
 	# Initial setup
@@ -54,22 +55,20 @@ class TowerPuzzle(AbstractPuzzle):
 		_pieceList = sample(self.initialTower.pieceList, randint(2, len(self.initialTower.pieceList)))
 		return Tower(_pieceList)
 
-	def generateInitialPopulation(self, popSize, inputText):
-		""" Input: Takes inputText in as a list of text files lines.
-			Returns: a list of Tower objects, comprising the population.
-		"""
-		self.initialTower = Tower(self.parseInitialTower(inputText))
+	def generateInitialPopulation(self):
+		""" Returns: a list of Tower objects, comprising the population."""
+		
 		self.towerDict = self.generateTowerDict()
 		assert self.initialTower.containsDoorAndLookout(), "Error: NO SOLUTION, Tower does not contain a door and lookout."
 		_population = []
 
 		print "Generating population..."
-		for i in xrange(popSize):
+		for i in xrange(self.popSize):
 			_population.append(self.generateRandomTower())
 		#for tower in _population:
 		#	print tower
 		print "Finished generating population."
-
+		print "Working..."
 		#self.testCreateChild()
 		#self.testFitness()
 		#print "END TEST"

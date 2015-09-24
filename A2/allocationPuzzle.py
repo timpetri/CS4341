@@ -8,13 +8,12 @@ from abstractPuzzle import AbstractPuzzle
 
 class AllocationPuzzle(AbstractPuzzle):
 	""" Puzzle 2: Number Allocation """
-	
-	def __init__(self):
-		""" Constructor:
-		Only initiates some variables to default """
-		self.ID = 0
-		self.popSize = 0
+
+	def __init__(self, inputText, popSize):
+		self.startList = self.parseInitialList(inputText)
+		self.popSize = popSize
 		self.bestScore = 0
+		self.ID = 0
 
 	def checkValid(self, num):
 		""" checkValid
@@ -68,15 +67,11 @@ class AllocationPuzzle(AbstractPuzzle):
 		Output: Returns a list of Allocation objects, with their corresponding list of 
 		numbers split into different bins """
 		population = []
-
-		# Generate a list of numbers using inputText
-		startList = self.parseInitialList(inputText)
-		self.popSize = popSize
 		
 		# Generate multiple individuals until target population size
-		for x in xrange(popSize):
-
-			copyList = startList
+		for x in xrange(self.popSize):		
+			copyList = self.startList
+			
 			# Shuffle input list for different individuals
 			shuffle(copyList)
 			individual = Allocation(copyList, self.ID)
