@@ -1,5 +1,6 @@
 from random import randint, random, shuffle, choice
 from abstractPuzzle import AbstractPuzzle
+import sys
 
 """
 Puzzle #1: PackingPuzzle
@@ -15,6 +16,9 @@ class PackingPuzzle(AbstractPuzzle):
 		self.test = 1
 
 	def generateInitialPopulation(self, popSize, inputText):
+		"""	Input: Takes inputText in as a list of text file lines.
+			Output: A list of randomly generated individuals, each being an array of numbers.
+		"""
 
 		self.targetValue = int(inputText[0].strip()) # get first element
 		self.validNumbers = map(lambda s: int(s.strip()), inputText[1:]) # rest of lines are valid numbers
@@ -48,6 +52,9 @@ class PackingPuzzle(AbstractPuzzle):
 		return population
 
 	def generateNumDict(self):
+		"""	Generate a dictionary to later ensure that no individuals can 
+			contain more occurrences of a number than allowed in input.
+		"""
 		_answerDict = {}
 		for num in self.validNumbers:
 			if num in _answerDict:
@@ -57,9 +64,14 @@ class PackingPuzzle(AbstractPuzzle):
 		return _answerDict
 
 	def createNewNumDict(self):
+		""" Makes a copy of self.validNumDict."""
 		return dict(self.validNumDict)
 
 	def createChild(self, parent1, parent2):
+		""" Returns: a child taken by taking a random number of elements in the front
+			of parent1 and appending a random number of elements from the back of
+			parent2.
+		"""
 
 		child = []
 
@@ -85,16 +97,19 @@ class PackingPuzzle(AbstractPuzzle):
 				child.append(x)
 				checkDict[x] -= 1
 
-		print "----------------"
-		print "Parent 1 : " + str(parent1)
-		print "Parent 2 : " + str(parent2)
-		print "Child : " + str(child)
-		print "----------------"
+		# print "----------------"
+		# print "Parent 1 : " + str(parent1)
+		# print "Parent 2 : " + str(parent2)
+		# print "Child : " + str(child)
+		# print "----------------"
 
 		return child
 
 	def mutate(self, individual):
-
+		"""	Input: member of the population.
+			Returns: individual with a random change. Validity of resulting mutation not enforced.
+				The random change will be a
+		"""
 
 		checkDict = self.createNewNumDict()
 
@@ -111,11 +126,15 @@ class PackingPuzzle(AbstractPuzzle):
 		else:
 			pos = 0
 
+		validChoices = []
+
 		for num in checkDict:
 			if checkDict[num] > 0:
-				individual[pos] = num
-				break
+				validChoices.append(num)
 
+		posInValidChoices = randint(0, len(validChoices)-1)
+
+		individual[pos] = validChoices[posInValidChoices]
 
 		return individual
 
