@@ -15,7 +15,7 @@ class PackingPuzzle(AbstractPuzzle):
 		self.test = 1
 
 	def generateInitialPopulation(self, popSize, inputText):
-			
+
 		self.targetValue = int(inputText[0].strip()) # get first element
 		self.validNumbers = map(lambda s: int(s.strip()), inputText[1:]) # rest of lines are valid numbers
 		self.validNumDict = self.generateNumDict() # keep track of count of the valid numbers
@@ -26,13 +26,13 @@ class PackingPuzzle(AbstractPuzzle):
 
 		population = []
 
-		for x in xrange(popSize):		
+		for x in xrange(popSize):
 
 			individual = []
 			lengthOfIndividual = randint(1, len(self.validNumbers)-1)
 
-			# copy of valid numbers 
-			validForIndividual = self.validNumbers[:] 
+			# copy of valid numbers
+			validForIndividual = self.validNumbers[:]
 
 			for x in xrange(lengthOfIndividual):
 				# remove a number from currently valid list and add to this individual
@@ -88,7 +88,7 @@ class PackingPuzzle(AbstractPuzzle):
 		print "----------------"
 		print "Parent 1 : " + str(parent1)
 		print "Parent 2 : " + str(parent2)
-		print "Child : " + str(child)	
+		print "Child : " + str(child)
 		print "----------------"
 
 		return child
@@ -104,7 +104,7 @@ class PackingPuzzle(AbstractPuzzle):
 
 		print str(len(individual))
 		print str(self.validNumDict)
-		
+
 		# index to mutate in individual
 		if len(individual) == 1:
 			pos = randint(0, len(individual)-1)

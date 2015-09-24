@@ -69,7 +69,7 @@ class TowerPuzzle(AbstractPuzzle):
 		#for tower in _population:
 		#	print tower
 		print "Finished generating population."
-		
+
 		#self.testCreateChild()
 		#self.testFitness()
 		#print "END TEST"
@@ -101,7 +101,7 @@ class TowerPuzzle(AbstractPuzzle):
 
 	def createChild(self, parent1, parent2):
 		""" Returns: a child taken by taking the first half of parent1 and the second half of parent2."""
-		assert isinstance(parent1, Tower) and isinstance(parent2, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual." 
+		assert isinstance(parent1, Tower) and isinstance(parent2, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual."
 		_child = Tower([])
 		_checkDict = self.createNewCheckDict()
 		pos1 = randint(1, len(parent1.pieceList) - 1)
@@ -131,7 +131,7 @@ class TowerPuzzle(AbstractPuzzle):
 						break
 
 		#print "Created child: " + str(_child) + " from parents: " + str(parent1) + " and " + str(parent2)
-		print str(_child) + '\n'
+		#print str(_child) + '\n'
 		return _child
 
 	def mutate(self, individual):
@@ -160,7 +160,7 @@ class TowerPuzzle(AbstractPuzzle):
 			Tower([wall, wall, door, lookout]) : 1,
 			Tower([door, wall, wall, lookout]) : 20 * 10,
 			Tower([door, wall, lookout, wall, lookout]) : 3,
-				
+
 		}
 		for tower in examples:
 			#print "Expect: " + str(examples[tower])
@@ -185,7 +185,7 @@ class TowerPuzzle(AbstractPuzzle):
 				position = 0
 
 				while position < towerHeight:
-					
+
 					piece = individual.pieceList[position]
 
 					#if the piece is not the top or bottom
@@ -206,14 +206,14 @@ class TowerPuzzle(AbstractPuzzle):
 							break
 					position += 1
 					_fitness += 1
-			#print "a " + str(_fitness)		
+			#print "a " + str(_fitness)
 			# approach from top down
-			if individual.pieceList[-1].pieceType == Piece._lookout:				
+			if individual.pieceList[-1].pieceType == Piece._lookout:
 				towerHeight = len(individual.pieceList)
 				position = towerHeight - 1
 
 				while position >= 0:
-					
+
 					piece = individual.pieceList[position]
 
 					#if the piece is not the top or bottom
@@ -232,7 +232,7 @@ class TowerPuzzle(AbstractPuzzle):
 						if piece.width > pieceBelow.width:
 							#print ">no width"
 							break
-					position -= 1		
+					position -= 1
 					_fitness += 1
 			#print "total " + str(_fitness)
 			return _fitness
@@ -242,6 +242,9 @@ class TowerPuzzle(AbstractPuzzle):
 			Returns: the score of the individual. Returns 0 for invalid individuals."""
 		assert isinstance(individual, Tower), "Error: Passed a non-Tower into a TowerPuzzle.score() individual."
 		return individual.score()
+
+	def levenshteinDistance(self, parent1, parent2):
+		return super(TowerPuzzle, self).levenshteinDistance(parent1.pieceList, parent2.pieceList)
 
 # End class TowerPuzzle
 
@@ -259,6 +262,9 @@ class Tower():
 	def __str__(self):
 		""" Overrides printing."""
 		return str([str(x) for x in self.pieceList])
+
+	def __len__(self):
+		return len(self.pieceList)
 
 	def containsDoorAndLookout(self):
 		""" Returns: True if the Tower has a Door and Lookout somewhere in it."""
