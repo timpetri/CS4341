@@ -18,7 +18,7 @@ class GenAlg():
 		initialPop = puzzle.generateInitialPopulation(popSize, inputLines)
 		for ind in initialPop:
 			self.population.append((puzzle.fitness(ind), ind))
-		self.population = self.sortPop(self.population, puzzle.fitness)
+		self.population = self.sortPop(self.population)
 
 		#keep track of the best score
 		self.bestIndividual = self.population[0][1]
@@ -28,16 +28,25 @@ class GenAlg():
 	def newGeneration(self):
 		self.genNum += 1
 		#Generate a new generation
+
 		self.generateNewPopulation()
 
-		genBest = self.population[0][1]
-		genBestScore = self.puzzle.score(genBest)
+
+		#Score the population as we have the fittness right now
+		scoredPop = []
+		for ind in self.population:
+			scoredPop.append((self.puzzle.score(ind[1]), ind[1]))
+		
+		scoredPop = self.sortPop(scoredPop)
+
+		genBest = scoredPop[0][1]
+		genBestScore = scoredPop[0][0]
 
 		if True:#(self.genNum % 100) == 0:
-			genWorst = self.population[-1][1]
-			genWorstScore = self.puzzle.score(genWorst)
-			genMedian = self.population[len(self.population)/2][1]
-			genMedianScore = self.puzzle.score(genMedian)
+			genWorst = scoredPop[-1][1]
+			genWorstScore = scoredPop[-1][0]
+			genMedian = scoredPop[len(self.population)/2][1]
+			genMedianScore = scoredPop[len(self.population)/2][0]
 
 			self.history.append((genBestScore, genWorstScore, genMedianScore))
 
@@ -91,10 +100,9 @@ class GenAlg():
 				thresholdOffSet -= 1
 			newGen.extend(children)
 
-		self.population = self.sortPop(newGen[:self.popSize], self.puzzle.fitness)
+		self.population = self.sortPop(newGen[:self.popSize])
 
-	def sortPop(self, population, fitnessFunct):
-		#sortedPopulation = [ (fitnessFunct(x), x) for x in population]
+	def sortPop(self, population):
 		sortedPopulation = [ x for x in sorted(population, reverse = True)]
 		return sortedPopulation
 
