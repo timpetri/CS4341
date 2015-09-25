@@ -126,9 +126,11 @@ class PackingPuzzle(AbstractPuzzle):
 			if checkDict[num] > 0:
 				validChoices.append(num)
 
-		posInValidChoices = randint(0, len(validChoices)-1)
+		randNumAdd = randint(0, len(validChoices))
 
-		individual[pos] = validChoices[posInValidChoices]
+		for _ in xrange(randNumAdd):
+			posInValidChoices = randint(0, len(validChoices)-1)
+			individual.append(validChoices[posInValidChoices])
 
 		return individual
 
