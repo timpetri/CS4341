@@ -42,7 +42,7 @@ class AllocationPuzzle(AbstractPuzzle):
 
 	def arraySplitter(self, p1, p2, index):
 		""" arraySplitter
-		Input: Takes in two Allocation objects and then split their arrays at given index 
+		Input: Takes in two Allocation objects and then split their arrays at given index
 		Output: Returns the newly generated array as a list of numbers """
 		result = []
 
@@ -60,27 +60,25 @@ class AllocationPuzzle(AbstractPuzzle):
 
 		return result
 
-	def generateInitialPopulation(self, popSize, inputText):
-		""" generateInitialPopulation 
-		Input: Takes inputText as a list of numbers for the Allocation Problem and the 
-		size of the population to be generated
-		Output: Returns a list of Allocation objects, with their corresponding list of 
+	def generateInitialPopulation(self):
+		""" generateInitialPopulation
+		Output: Returns a list of Allocation objects, with their corresponding list of
 		numbers split into different bins """
 		population = []
-		
+
 		# Generate multiple individuals until target population size
-		for x in xrange(self.popSize):		
+		for x in xrange(self.popSize):
 			copyList = self.startList
-			
+
 			# Shuffle input list for different individuals
 			shuffle(copyList)
 			individual = Allocation(copyList, self.ID)
 			self.ID += 1
-			
+
 			# Add generated individual to population list
 			population.append(individual)
 			score = self.score(individual)
-			
+
 			# Check if individual has best score
 			if score > self.bestScore:
 				self.bestScore = score
@@ -93,7 +91,7 @@ class AllocationPuzzle(AbstractPuzzle):
 		Output: A child created using the parent arrays """
 		assert isinstance(parent1, Allocation), "allocationPuzzle().createChild() Error: Invalid input for parent1."
 		assert isinstance(parent2, Allocation), "allocationPuzzle().createChild() Error: Invalid input for parent2."
-		
+
 		childList = []
 
 		# Generate an index value and then create a new array based off its parents
@@ -110,10 +108,10 @@ class AllocationPuzzle(AbstractPuzzle):
 		Input: An individual Allocation object to have its array mutated
 		Output: A new Allocation object with a new number array """
 		assert isinstance(individual, Allocation), "allocationPuzzle().mutate() Error: Invalid input for individual."
-		
+
 		childList = []
 		tempList = list(individual.orig)
-		
+
 		# Run through the individual's array of numbers and mutate 5% of its numbers
 		for val in tempList:
 			if randint(0, 99) < 5:
@@ -131,21 +129,21 @@ class AllocationPuzzle(AbstractPuzzle):
 		Input: An individual to have its fitness score determined
 		Output: The individual's score against the best score generated from the first population """
 		assert isinstance(individual, Allocation), "allocationPuzzle().fitness() Error: Invalid input for individual."
-		
+
 		# Fitness is determined from score minus original population's score
 		return self.score(individual) - self.bestScore
-		
+
 	def score(self, individual):
 		""" score
 		Input: An individual to be scored
 		Output: The individual's score"""
 		assert isinstance(individual, Allocation), "allocationPuzzle().score() Error: Invalid input for individual."
-		
+
 		total = 0
 		bin1Total = 0
 		bin2Total = 0
 		first = True
-		
+
 		# Calculate Bin1: Multiplication of individual numbers
 		for x in individual.bin1:
 			if (first):
@@ -159,7 +157,7 @@ class AllocationPuzzle(AbstractPuzzle):
 			bin2Total += x
 
 		# Ignore Bin3: No numbers are considered for scoring
-		
+
 		# Calculate the average of the two bins
 		total = (bin1Total+bin2Total)/2
 		return total;
@@ -170,7 +168,7 @@ class AllocationPuzzle(AbstractPuzzle):
 
 class Allocation():
 	""" Represents a group of bins, which are scored differently. """
-	
+
 	def __init__(self, inputList, ID):
 		""" Constructor
 		Input: List of numbers """

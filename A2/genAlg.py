@@ -26,16 +26,18 @@ class GenAlg():
 		self.bestIndividualGen = 0
 
 	def newGeneration(self):
+		"""Creates a new generation and records the scores"""
 		self.genNum += 1
-		#Generate a new generation
 
+		#Generate a new generation
 		self.generateNewPopulation()
 
 		#Score the population as we have the fittness right now
 		scoredPop = []
 		for ind in self.population:
 			scoredPop.append((self.puzzle.score(ind[1]), ind[1]))
-		
+
+		#Sort by score
 		scoredPop = self.sortPop(scoredPop)
 
 		genBest = scoredPop[0][1]
@@ -56,6 +58,7 @@ class GenAlg():
 			self.bestIndividualGen = self.genNum
 
 	def generateNewPopulation(self):
+		"""Selects parents from the population after potential culling and creates children"""
 
 		newGen = []
 
@@ -66,10 +69,8 @@ class GenAlg():
 
 		#if we are culling remove the survivingRation worst performers
 		if self.cullRatio:
-			#print self.population
 			cullLen = int(len(self.population) * self.cullRatio)
 			self.population = self.population[:len(self.population)-cullLen]
-			#print self.population
 
 		#generate children until we have hit popsize
 		parentLen = len(self.population)
@@ -79,12 +80,15 @@ class GenAlg():
 			parents = self.population[:]
 			shuffle(parents)
 			children = []
+			#pick parents from the parent pop without replacement
 			for i in xrange(parentLen/2):
 				parent1 = parents.pop()[1]
 				parent2 = parents.pop()[1]
 
+				#Set the min difference between the two parents to accept
 				threshold = max(len(parent1), len(parent2))/4 + thresholdOffSet
 
+				#If the parents are different enough then generate a child from them
 				if self.puzzle.levenshteinDistance(parent1, parent2) > threshold:
 					child = self.puzzle.createChild(parent1, parent2)
 					if random() < self.mutateRatio:
@@ -92,8 +96,9 @@ class GenAlg():
 
 					childFitness = self.puzzle.fitness(child)
 					children.append((childFitness, child))
-				#else:
-					#print "DENIED"
+
+			#If we couldnt generate any children with the current threshold
+			#then reduce the threshold by 1
 			if len(children) == 0:
 				#print "Reducing thresholdOffSet"
 				thresholdOffSet -= 1
@@ -102,10 +107,12 @@ class GenAlg():
 		self.population = self.sortPop(newGen[:self.popSize])
 
 	def sortPop(self, population):
+		"""Sorts the population based on the assosciated score/fitness"""
 		sortedPopulation = [ x for x in sorted(population, reverse = True)]
 		return sortedPopulation
 
 	def recordResults(self):
+		"""Prints the best scoring individual and writes the history to file"""
 		print "Best scoring was " + str(self.bestIndividual) + " with score of " + str(self.bestScore) + " in generation " + str(self.bestIndividualGen)
 		print "Ran for " + str(self.genNum) + " generations"
 

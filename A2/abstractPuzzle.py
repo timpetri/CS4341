@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
+
 class AbstractPuzzle(object):
+	"""Abstract puzzle that defines interface and the levenshtein distance equation"""
 	__metaclass__ = ABCMeta
 
 	@abstractmethod
@@ -23,6 +25,7 @@ class AbstractPuzzle(object):
 		pass
 
 	def levenshteinDistance(self, str1, str2):
+		"""Calculates the levenshtein distance between the arrays str1 and str2"""
 		m = len(str1)
 		n = len(str2)
 		lensum = float(m + n)

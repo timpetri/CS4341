@@ -2,7 +2,6 @@ import sys
 import os
 import time
 import argparse
-from SimplePuzzle import SimplePuzzle
 from towerPuzzle import TowerPuzzle
 from packingPuzzle import PackingPuzzle
 from allocationPuzzle import AllocationPuzzle
@@ -10,7 +9,6 @@ from genAlg import GenAlg
 
 #Dictionary for the different puzzles
 puzzleDict = {
-	#0: SimplePuzzle,
 	1: PackingPuzzle,
 	2: AllocationPuzzle,
 	3: TowerPuzzle
