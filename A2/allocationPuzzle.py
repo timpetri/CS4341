@@ -4,6 +4,7 @@
 """
 
 from random import randint, random, uniform, shuffle
+from copy import deepcopy
 from abstractPuzzle import AbstractPuzzle
 
 class AllocationPuzzle(AbstractPuzzle):
@@ -112,13 +113,13 @@ class AllocationPuzzle(AbstractPuzzle):
 		childList = []
 		tempList = list(individual.orig)
 
-		# Run through the individual's array of numbers and mutate 5% of its numbers
-		for val in tempList:
-			if randint(0, 99) < 5:
-				childList.append(uniform(-10, 10))
-			else:
-				childList.append(val)
+		a = randint(0, len(tempList)-1)
+		b = a
+		while b == a:		
+			b = randint(0, len(tempList)-1)
 
+		tempList[a], tempList[b] = tempList[b], tempList[a]
+		
 		# Generate a new individual
 		mutated = Allocation(tempList, self.ID)
 		self.ID += 1
