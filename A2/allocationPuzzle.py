@@ -95,7 +95,7 @@ class AllocationPuzzle(AbstractPuzzle):
 		childList = []
 
 		# Generate an index value and then create a new array based off its parents
-		index = randint(0, len(parent1.orig))
+		index = 15 # randint(0, len(parent1.orig))
 		childList = self.arraySplitter(parent1, parent2, index)
 
 		# Create and return the child
@@ -131,14 +131,14 @@ class AllocationPuzzle(AbstractPuzzle):
 		assert isinstance(individual, Allocation), "allocationPuzzle().fitness() Error: Invalid input for individual."
 
 		# Fitness is determined from score minus original population's score
-		return self.score(individual) - self.bestScore
+		return self.score(individual) # - self.bestScore
 
 	def score(self, individual):
 		""" score
 		Input: An individual to be scored
 		Output: The individual's score"""
 		assert isinstance(individual, Allocation), "allocationPuzzle().score() Error: Invalid input for individual."
-
+		
 		total = 0
 		bin1Total = 0
 		bin2Total = 0
