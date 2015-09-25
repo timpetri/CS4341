@@ -95,28 +95,24 @@ class PackingPuzzle(AbstractPuzzle):
 				child.append(x)
 				checkDict[x] -= 1
 
-		#print "----------------"
-		#print "Parent 1 : " + str(parent1)
-		#print "Parent 2 : " + str(parent2)
-		#print "Child : " + str(child)
-		#print "----------------"
+		# print "----------------"
+		# print "Parent 1 : " + str(parent1)
+		# print "Parent 2 : " + str(parent2)
+		# print "Child : " + str(child)
+		# print "----------------"
 
 		return child
 
 	def mutate(self, individual):
 		"""	Input: member of the population.
-			Returns: individual with a random change. Validity of resulting mutation not enforced.
-				The random change will be a
+			Returns: individual with a random mutation.
+			A mutation is a random change of one number in the individual.
 		"""
 
 		checkDict = self.createNewNumDict()
 
 		for x in individual:
 			checkDict[x] -= 1
-
-
-		#print str(len(individual))
-		#print str(self.validNumDict)
 
 		# index to mutate in individual
 		if len(individual) != 1:
