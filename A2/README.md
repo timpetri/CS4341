@@ -10,8 +10,9 @@
 ### Usage:
 
 	$ ga.py puzzleNum fileName runtime [-h] [-p POPSIZE] [-c [CULL]] [-e [ELITISM]] [-m MUTATECHANCE]
+	
 # Puzzle 1:
-	$ python ga.py 1 ...
+	$ python ga.py 1 input/puzzle1test.txt 10 -c -e -p 10
 # Puzzle 2:
 	$ python ga.py 2 input/allocation2.txt 10 -c -e 
 # Puzzle 3:

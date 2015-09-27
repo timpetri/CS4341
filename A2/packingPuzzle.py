@@ -106,7 +106,7 @@ class PackingPuzzle(AbstractPuzzle):
 	def mutate(self, individual):
 		"""	Input: member of the population.
 			Returns: individual with a random mutation.
-			A mutation is a random change of one number in the individual.
+			A mutation consists a number of valid numbers added to the end of the individual.
 		"""
 
 		checkDict = self.createNewNumDict()
@@ -135,17 +135,23 @@ class PackingPuzzle(AbstractPuzzle):
 		return individual
 
 	def fitness(self, individual):
+		"""	Input: member of the population.
+			Returns: The difference between the target value and the absolute difference between the target value 
+			and the sum of all elements in individual.
+		"""
 		total = 0
 		for x in individual:
 			total += x
 
 		return self.targetValue - abs(self.targetValue - total)
-		"""if total <= self.targetValue:
-			return total
-		else:
-			return -total"""
+
 
 	def score(self, individual):
+		"""	Input: member of the population.
+			Returns: The sum of all elements in array unless the sum is greater than the target
+			in which case the returned value is 0.
+		"""
+
 		total = 0
 		for x in individual:
 			total += x
