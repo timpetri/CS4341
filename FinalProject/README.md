@@ -16,7 +16,7 @@ Test Quantopian Zipline framework:
 
 Test neural nets are installed (and see my currently broken neural network test):
 
-	$ python test_nick.py
+	$ python runner.py [strategy_num]
 
 ### Dependencies
 

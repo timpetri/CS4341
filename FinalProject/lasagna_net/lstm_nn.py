@@ -2,25 +2,24 @@ import numpy as np
 import theano
 import theano.tensor as T
 import lasagne
+import time
 
 class LSTM_NN(object):
-	""" A Long Short-Term Memory recurrent neural net example."""
-
+	'''
+	Accepts arguments
+		x: list of input data in the form
+			x = [
+				[[x1 x2 ... xn],[x1 x2 ... xn],[x1 x2 ... xn]], # stock 1
+				[[x1 x2 ... xn],[x1 x2 ... xn],[x1 x2 ... xn]]  # stock 2
+			]
+		y: list of expected data in the form. all values of y must be 0 or 1. NOTE: currently only supports a single output y.
+			y = [
+				[[y1 y2 ... yn],[y1 y2 ... yn],[y1 y2 ... yn]], # stock 1 expected output
+				[[y1 y2 ... yn],[y1 y2 ... yn],[y1 y2 ... yn]]  # stock 2 expected output
+			]
+		All stock data must have the same amount of timesteps/samples
+	'''
 	def __init__(self, x, y, num_epochs=1000):
-		"""	Params:
-				x: list of input data in the form
-					x = [
-						[[x1 x2 ... xn],[x1 x2 ... xn],[x1 x2 ... xn]], # stock 1
-						[[x1 x2 ... xn],[x1 x2 ... xn],[x1 x2 ... xn]]  # stock 2
-					]
-				y: list of expected data in the form. all values of y must be 0 or 1. NOTE: currently only supports a single output y.
-					y = [
-						[[y1 y2 ... yn],[y1 y2 ... yn],[y1 y2 ... yn]], # stock 1 expected output
-						[[y1 y2 ... yn],[y1 y2 ... yn],[y1 y2 ... yn]]  # stock 2 expected output
-					]
-			All stock data must have the same amount of timesteps/samples.
-		"""
-
 		#automatically define num_inputs, num_outputs, and max_length
 		if len(x) < 0 or len(x) != len(y):
 			raise ValueError("Invalid training data")
@@ -61,6 +60,7 @@ class LSTM_NN(object):
 		#for n in range(len(x)):
 		#	train_mask[n, train_length:] = 0
 		
+		
 		train_x = np.array(x).reshape((len(x), self.max_length, self.num_inputs))
 		train_y = np.array(y).reshape((len(x), self.max_length, self.num_outputs))
 		
@@ -73,7 +73,6 @@ class LSTM_NN(object):
 		prediction = lasagne.layers.get_output(self.network, deterministic=False)
 
 		loss = lasagne.objectives.binary_crossentropy(prediction, target_var)
-		
 
 		#temporary disable regularization
 		'''
@@ -81,25 +80,28 @@ class LSTM_NN(object):
 		regu_loss = lasagne.regularization.regularize_network_params(network, lasagne.regularization.l2)
 		loss = loss + regu * regu_loss
 		'''
+		
 		loss = loss.mean()
 		params = lasagne.layers.get_all_params(self.network, trainable=True)
 
 		updates = lasagne.updates.adam(loss, params, learning_rate=0.001)
 
 		train_fn = theano.function([self.input_layer.input_var, target_var, self.mask_layer.input_var], loss, updates=updates)
+		start_time = time.time()
 		for epoch in range(num_epochs):
 			training_error = train_fn(train_x, train_y, train_mask)
-			print("Epoch {} training error = {}".format(epoch, training_error))
+			print ("Epoch {} training error = {}".format(epoch, training_error))
+			print "Epochs complete:", str(epoch) + "/" + str(num_epochs), "\tTime elapsed:", str(time.time()-start_time), "seconds."
 
 
-
+	'''
+		Accepts arguments
+		x: a single sequence of input of length similar to training data
+		
+		Outputs a list of digits between 0 and 1 for all timesteps in the sequence
+	'''
 	def predict(self, x):
-		"""	Params:
-				x: a single sequence of input of length similar to training data
-			
-			Outputs a list of digits between 0 and 1 for all timesteps in the sequence
-		"""
-		print x
+		#print x
 		print self.max_length, self.num_inputs
 		pred_x = np.array(x).reshape((1, self.max_length, self.num_inputs))
 		pred_x = pred_x.astype(theano.config.floatX)
