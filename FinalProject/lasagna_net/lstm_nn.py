@@ -101,8 +101,9 @@ class LSTM_NN(object):
 		Outputs a list of digits between 0 and 1 for all timesteps in the sequence
 	'''
 	def predict(self, x):
-		#print x
-		print self.max_length, self.num_inputs
+		assert len(x) == self.max_length, "ERROR: " + str(len(x)) + " instead of " + str(self.max_length)
+		assert len(x[0]) == self.num_inputs, "ERROR: " + str(len(x[0])) + " instead of " + str(self.num_inputs)
+		#print len(x), self.max_length, len(x[0]), self.num_inputs
 		pred_x = np.array(x).reshape((1, self.max_length, self.num_inputs))
 		pred_x = pred_x.astype(theano.config.floatX)
 		pred_mask = np.ones((1, self.max_length)).astype(theano.config.floatX)
