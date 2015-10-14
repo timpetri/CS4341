@@ -23,7 +23,6 @@ Test neural nets are installed (and see my currently broken neural network test)
 * NumPy, SciPy, scikit-learn (use Anaconda): http://docs.continuum.io/anaconda/install
 * Lasagne (requires Theano): http://lasagne.readthedocs.org/en/latest/user/installation.html
 * Quantopian Zipline (backtesting): https://github.com/quantopian/zipline
-* Pylearn2 (SVM and NN): http://deeplearning.net/software/pylearn2/
 
 ### Results
 	TODO.
