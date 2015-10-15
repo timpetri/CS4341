@@ -23,6 +23,7 @@ np.random.seed(13)
 from manager.manager import Manager
 from svm_learn.svm import SVM
 from neuralnets.tradingnet import TradingNet
+from naive_bayes.naive_bayes import NaiveBayes
 
 # handling dates
 import pytz
@@ -40,7 +41,8 @@ import matplotlib.pyplot as plt
 global STRATEGY_CLASS
 strategy_dict = {
 	1: TradingNet,
-	2: SVM
+	2: SVM,
+	3: NaiveBayes
 }
 
 #==============================================================================================
