@@ -26,14 +26,24 @@ class SVM(object):
 		self.num_inputs = len(x[0][0])
 		self.num_outputs = len(y[0][0])
 		self.max_length = len(x[0])
-		train_x = np.array(x).reshape((len(x), self.max_length, self.num_inputs))
-		train_y = np.array(y).reshape((len(x), self.max_length, self.num_outputs))
+		train_x = []
+		train_y = []
 
-		#print "input: " + str(x)
-		#print "output: " + str(y)
+		print "input: " + str(x)
+		print "output: " + str(y)
 
-		self.clf = svm.SVC()
-		self.clf.fit(x[0], y[0])
+		for y1 in y[0]:
+			train_y.append(y1[0])
+
+
+		#self.clf = svm.SVR()
+		#self.clf = svm.SVC()
+		#self.clf = svm.NuSVC()#BAD
+		#self.clf = svm.NuSVR()#BAD
+		#self.clf = svm.OneClassSVM()
+		#self.clf = svm.LinearSVC()
+		self.clf = svm.SVC(C=10)
+		self.clf.fit(x[0], train_y)
 
 
 
