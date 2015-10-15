@@ -65,12 +65,11 @@ def initialize(context):
 	context.training_data = context.training_data[:-2]			# delete last data entry, because it won't be used
 	context.normalized_data = context.normalized_data[:-2] 		# delete last data entry, because it won't be used
 	#print target
-	print "Please approve SPY test data:"
-	plt.figure("Training Data")
-	for i in range(len(context.normalized_data[0])):
-		plt.plot([x[i] for x in context.normalized_data])
-	plt.legend(['open', 'high', 'low', 'close', 'volume', 'price'], loc='upper left')
-	plt.show()
+	#plt.figure("Training Data")
+	#for i in range(len(context.normalized_data[0])):
+	#	plt.plot([x[i] for x in context.normalized_data])
+	#plt.legend(['open', 'high', 'low', 'close', 'volume', 'price'], loc='upper left')
+	#plt.show()
 
 	print "Train..."
 	#print len(context.training_data), len(context.normalized_data), len(target)
@@ -153,7 +152,8 @@ def analyze(perf_list):
 		plt.legend(['algorithm', 'BENCHMARK'], loc='upper left')
 		outputGraph = "algo_" + str(time.strftime("%Y-%m-%d_%H-%M-%S"))
 		plt.savefig("output/" + outputGraph, bbox_inches='tight')
-	plt.show()
+		time.sleep(1)
+	#plt.show()
 
 #==============================================================================================
 
@@ -218,7 +218,7 @@ def runMaster():
 	perf_manual = []
 	for stock in SELECT_STOCKS:
 		BACKTEST_STOCK = stock
-		backtestData = loadData(2003, 2003+BACKTEST_TIME, stock_list=[stock, 'SPY']) #, startM=1, endM=2, 
+		backtestData = loadData(2002, 2002+BACKTEST_TIME, stock_list=[stock, 'SPY']) #, startM=1, endM=2, 
 		print "Create algorithm..."
 		perf_manual.append(algo_obj.run(backtestData))
 	analyze(perf_manual)
@@ -239,12 +239,16 @@ def main():
 	parser.add_argument("-b", "--backtest_time", default=1, type=int, choices=[year for year in range(0,14)])
 	parser.add_argument("-e", "--epochs", default=2000, type=int)
 	parser.add_argument("-z", "--normalize", action='store_false', help='Turn normalization off.')
+	parser.add_argument("-o", "--overfit", action='store_false', help='Perform test with overfitting.')
 	args = parser.parse_args()
 	STRATEGY_CLASS = strategy_dict[args.strategy_num]
 	TRAINING_TIME = args.training_time
 	BACKTEST_TIME = args.backtest_time
 	EPOCHS = args.epochs
 	IS_NORMALIZE = args.normalize
+	IS_OVERFIT = args.overfit
+	if not IS_OVERFIT or not IS_NORMALIZE:
+		print "ERROR: not implemented"; return
 	print "Using:", str(STRATEGY_CLASS)
 	print "Train", TRAINING_TIME, "year,", "Test", BACKTEST_TIME, "year."
 	runMaster()

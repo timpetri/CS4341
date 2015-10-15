@@ -19,7 +19,7 @@ class DeepNet(object):
 			]
 		All stock data must have the same amount of timesteps/samples
 	'''
-	def __init__(self, x, y, num_epochs=1000, num_layers=4):
+	def __init__(self, x, y, num_epochs=1000, num_layers=10):
 		#automatically define num_inputs, num_outputs, and max_length
 		if len(x) < 0 or len(x) != len(y):
 			raise ValueError("Invalid training data")
