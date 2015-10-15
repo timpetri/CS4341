@@ -24,6 +24,7 @@ from manager.manager import Manager
 from neuralnets.tradingnet import TradingNet
 from svm_learn.svm import SVM
 from naive_bayes.naive_bayes import NaiveBayes
+from neuralnets.deepnet import DeepNet
 
 # handling dates
 import pytz
@@ -42,7 +43,8 @@ global STRATEGY_CLASS, TRAINING_TIME, BACKTEST_TIME, EPOCHS, TRAINING_STOCK, BAC
 strategy_dict = {
 	1: TradingNet,
 	2: SVM,
-	3: NaiveBayes
+	3: NaiveBayes,
+	4: DeepNet
 }
 
 
