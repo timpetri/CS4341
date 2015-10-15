@@ -22,10 +22,7 @@ np.random.seed(13)
 # clustering, managing, and neural nets
 from manager.manager import Manager
 from neuralnets.tradingnet import TradingNet
-<<<<<<< HEAD
 from svm_learn.svm import SVM
-=======
->>>>>>> 5b521ca65d1c56612f462076dd351128131985fd
 from naive_bayes.naive_bayes import NaiveBayes
 
 # handling dates
@@ -66,6 +63,7 @@ def initialize(context):
 	context.training_data = context.training_data[:-2]			# delete last data entry, because it won't be used
 	context.normalized_data = context.normalized_data[:-2] 		# delete last data entry, because it won't be used
 	#print target
+	print "Please approve SPY test data:"
 	plt.figure("Training Data")
 	for i in range(len(context.normalized_data[0])):
 		plt.plot([x[i] for x in context.normalized_data])
@@ -151,7 +149,7 @@ def analyze(perf_list):
 		plt.xlabel("Time (Days)")
 		plt.ylabel("Percent Returns vs. SPY" + str(i))
 		plt.legend(['algorithm', 'BENCHMARK'], loc='upper left')
-		outputGraph = "algo" + str(STRATEGY_CLASS) + "_" + str(time.strftime("%Y-%m-%d_%H-%M-%S"))
+		outputGraph = "algo_" + str(time.strftime("%Y-%m-%d_%H-%M-%S"))
 		plt.savefig("output/" + outputGraph, bbox_inches='tight')
 	plt.show()
 
@@ -245,8 +243,6 @@ def main():
 	BACKTEST_TIME = args.backtest_time
 	EPOCHS = args.epochs
 	IS_NORMALIZE = args.normalize
-	print IS_NORMALIZE
-	return
 	print "Using:", str(STRATEGY_CLASS)
 	print "Train", TRAINING_TIME, "year,", "Test", BACKTEST_TIME, "year."
 	runMaster()
