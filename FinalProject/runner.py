@@ -22,7 +22,10 @@ np.random.seed(13)
 # clustering, managing, and neural nets
 from manager.manager import Manager
 from neuralnets.tradingnet import TradingNet
+<<<<<<< HEAD
 from svm_learn.svm import SVM
+=======
+>>>>>>> 5b521ca65d1c56612f462076dd351128131985fd
 from naive_bayes.naive_bayes import NaiveBayes
 
 # handling dates
