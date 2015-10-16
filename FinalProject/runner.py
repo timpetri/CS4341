@@ -247,7 +247,7 @@ def main():
 	EPOCHS = args.epochs
 	IS_NORMALIZE = args.normalize
 	IS_OVERFIT = args.overfit
-	if not IS_OVERFIT or not IS_NORMALIZE:
+	if not IS_OVERFIT: #or not IS_NORMALIZE
 		print "ERROR: not implemented"; return
 	print "Using:", str(STRATEGY_CLASS)
 	print "Train", TRAINING_TIME, "year,", "Test", BACKTEST_TIME, "year."
