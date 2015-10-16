@@ -29,26 +29,26 @@ class NaiveBayes(object):
 		if len(x) < 0 or len(x) != len(y):
 			raise ValueError("Invalid training data")
 
-		print str(x)
+		# print str(x)
 
 		self.num_inputs = len(x[0][0])
 		self.num_outputs = len(y[0][0])
 		self.max_length = len(x[0])
 
 		numInputs = len(x[0])
-		print(numInputs)
+		# print(numInputs)
 
 		pastFiveDays = [] # each feature i will be [h, l, c, o] for day t-i for i = 1...5
 		followingDay = [] # each day will be day t
 
 		for i in range(5, numInputs-1):
-			print str(i)
+			# print str(i)
 			pastFiveDays.append(np.reshape(x[0][i-5:i],20))
 			followingDay.append(y[0][i+1][0])
 
 
-		print str(pastFiveDays)
-		print str(followingDay)
+		# print str(pastFiveDays)
+		# print str(followingDay)
 
 
 		self.clf = GaussianNB()
@@ -67,9 +67,13 @@ class NaiveBayes(object):
 		assert len(x[0]) == self.num_inputs, "ERROR: " + str(len(x[0])) + " instead of " + str(self.num_inputs)
 
 
-		l = [] # needs to return an array..
-		last = len(x[0])
+		last = len(x)
+		# print str(last)
+		# print str(x[last-6:last-1])
+		# print str(np.reshape(x[last-6:last-1], 20))
+		# print str(len(np.reshape(x[last-6:last-1], 20)))
 
-		ret =  l.append(self.clf.predict(np.reshape(x[0][last-6:last-1], 20)))
+		ret = self.clf.predict(np.reshape(x[last-6:last-1], 20))
+		ret = ret.reshape(1, 1)
 
 		return ret

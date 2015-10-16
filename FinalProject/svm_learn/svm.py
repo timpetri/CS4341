@@ -61,4 +61,5 @@ class SVM(object):
 		ret =  self.clf.predict(x)
 		#print "PREDICTING " + str(ret)
 		ret = ret.reshape((self.max_length, self.num_outputs))
+		#print "PREDICTING " + str(ret)
 		return ret
